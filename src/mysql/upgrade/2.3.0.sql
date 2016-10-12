@@ -32,3 +32,11 @@ where `cfg_id` = 1037;
 
 delete from config_cfg where cfg_id ='18';
 delete from config_cfg where cfg_id ='2001';
+
+ALTER TABLE `group_grp`
+ADD COLUMN
+`grp_SpecialProperties` text AFTER `grp_hasSpecialProps`;
+
+ALTER TABLE `person2group2role_p2g2r`
+ADD COLUMN
+`p2g2r_membershipData` text AFTER `p2g2r_rle_ID`;

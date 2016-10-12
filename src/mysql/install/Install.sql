@@ -510,26 +510,6 @@ CREATE TABLE `family_fam` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `groupprop_master`
---
-
-CREATE TABLE `groupprop_master` (
-  `grp_ID` mediumint(9) unsigned NOT NULL default '0',
-  `prop_ID` tinyint(3) unsigned NOT NULL default '0',
-  `prop_Field` varchar(5) NOT NULL default '0',
-  `prop_Name` varchar(40) default NULL,
-  `prop_Description` varchar(60) default NULL,
-  `type_ID` smallint(5) unsigned NOT NULL default '0',
-  `prop_Special` mediumint(9) unsigned default NULL,
-  `prop_PersonDisplay` enum('false','true') NOT NULL default 'false'
-) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT='Group-specific properties order, name, description, type';
-
---
--- Dumping data for table `groupprop_master`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -544,9 +524,11 @@ CREATE TABLE `group_grp` (
   `grp_Name` varchar(50) NOT NULL default '',
   `grp_Description` text,
   `grp_hasSpecialProps` BOOLEAN NOT NULL default 0,
+  `grp_SpecialProperties` text,
   PRIMARY KEY  (`grp_ID`),
   UNIQUE KEY `grp_ID` (`grp_ID`),
   KEY `grp_ID_2` (`grp_ID`)
+
 ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
@@ -776,6 +758,7 @@ CREATE TABLE `person2group2role_p2g2r` (
   `p2g2r_per_ID` mediumint(8) unsigned NOT NULL default '0',
   `p2g2r_grp_ID` mediumint(8) unsigned NOT NULL default '0',
   `p2g2r_rle_ID` mediumint(8) unsigned NOT NULL default '0',
+  `p2g2r_membershipData` text,
   PRIMARY KEY  (`p2g2r_per_ID`,`p2g2r_grp_ID`),
   KEY `p2g2r_per_ID` (`p2g2r_per_ID`,`p2g2r_grp_ID`,`p2g2r_rle_ID`)
 ) ENGINE=MyISAM CHARACTER SET utf8 COLLATE utf8_unicode_ci;
