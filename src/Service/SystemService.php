@@ -307,7 +307,15 @@ class SystemService
         $version->setVersion($dbUpdate["dbVersion"]);
         $version->setUpdateStart(new \DateTime());
         foreach ($dbUpdate["scripts"] as $dbScript) {
-          $this->rebuildWithSQL($dbScript);
+          $scriptFileExtension = get_file_extension($dbScript);
+          if ( $scriptFileExtension == "sql" )
+          {
+            $this->rebuildWithSQL($dbScript);
+          }
+          elseif ( $scriptFileExtension == "php" )
+          {
+            require dirname(dirname(__FILE__)). $dbScript;
+          }
         }
         $version->setUpdateEnd(new \DateTime());
         $version->save();

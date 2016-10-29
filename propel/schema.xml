@@ -250,6 +250,7 @@
         <column name="grp_Name" phpName="Name" type="VARCHAR" size="50" required="true" defaultValue=""/>
         <column name="grp_Description" phpName="Description" type="LONGVARCHAR"/>
         <column name="grp_hasSpecialProps" phpName="HasSpecialProps" type="BOOLEAN" defaultValue="0"/>
+        <column name="grp_SpecialProperties" phpName="SpecialProps" type="LONGVARCHAR" defaultValue="0"/>
         <foreign-key foreignTable="list_lst">
             <reference local="grp_Type" foreign="lst_OptionID"/>
         </foreign-key>
@@ -288,6 +289,7 @@
                 primaryKey="true" required="true" defaultValue="0"/>
         <column name="p2g2r_rle_ID" phpName="RoleId" type="SMALLINT" size="8" sqlType="mediumint(8) unsigned"
                 required="true" defaultValue="0"/>
+        <column name="p2g2r_membershipData" phpName="MembershipData" type="LONGVARCHAR" />
         <index name="p2g2r_per_ID">
             <index-column name="p2g2r_per_ID"/>
             <index-column name="p2g2r_grp_ID"/>
