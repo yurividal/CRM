@@ -4,23 +4,19 @@ namespace ChurchCRM\Service;
 
 require_once dirname(dirname(__FILE__)) . "/Include/ReportFunctions.php";
 require_once dirname(dirname(__FILE__)) . "/Include/Functions.php";
-require_once dirname(dirname(__FILE__)) . "/Include/MICRFunctions.php";
-require_once dirname(dirname(__FILE__)) . '/vendor/autoload.php';
-require_once dirname(dirname(__FILE__)) . '/orm/conf/config.php';
 
 use ChurchCRM\PledgeQuery;
+use ChurchCRM\MICRReader;
 
 class FinancialService
 {
 
   private $baseURL;
-  private $personService;
   private $familyService;
 
   public function __construct()
   {
     $this->baseURL = $_SESSION['sRootPath'];
-    $this->personService = new PersonService();
     $this->familyService = new FamilyService();
   }
 
@@ -283,7 +279,7 @@ class FinancialService
     global $bUseScannedChecks;
     if ($bUseScannedChecks) {
       require "../Include/MICRFunctions.php";
-      $micrObj = new \MICRReader(); // Instantiate the MICR class
+      $micrObj = new MICRReader(); // Instantiate the MICR class
       $routeAndAccount = $micrObj->FindRouteAndAccount($tScanString); // use routing and account number for matching
       if ($routeAndAccount) {
         $sSQL = "SELECT fam_ID, fam_Name FROM family_fam WHERE fam_scanCheck=\"" . $routeAndAccount . "\"";
@@ -335,7 +331,7 @@ class FinancialService
     list ($deposit_total) = mysql_fetch_row($rsDepositTotal);
     return $deposit_total;
   }
-  
+
   function getPaymentJSON($payments)
   {
     if ($payments) {
@@ -526,8 +522,8 @@ class FinancialService
     }
 
   }
-  
-  function processCurrencyDenominations($payment,$groupKey) 
+
+  function processCurrencyDenominations($payment,$groupKey)
   {
     $currencyDenoms = json_decode($payment->cashDenominations);
     foreach ($currencyDenoms as $cdom)
@@ -540,7 +536,7 @@ class FinancialService
       }
     }
   }
-	
+
   function insertPledgeorPayment($payment)
   {
     requireUserGroupMembership("bFinance");
@@ -717,7 +713,7 @@ class FinancialService
       }
     }
   }
-  
+
      private function generateDepositSummary($thisReport)
   {
     $thisReport->depositSummaryParameters->title->x = 85;
@@ -734,8 +730,8 @@ class FinancialService
     $thisReport->depositSummaryParameters->summary->AmountX = 185;
     $thisReport->depositSummaryParameters->aggregateX = 135;
     $thisReport->depositSummaryParameters->displayBillCounts = false;
-    
-    
+
+
     $thisReport->pdf->AddPage();
     $thisReport->pdf->SetXY($thisReport->depositSummaryParameters->date->x, $thisReport->depositSummaryParameters->date->y);
     $thisReport->pdf->Write(8, $thisReport->deposit->dep_Date);
@@ -818,7 +814,7 @@ class FinancialService
     $grandTotalStr = sprintf("%.2f", $thisReport->deposit->dep_Total);
     $thisReport->pdf->PrintRightJustified($thisReport->curX + $thisReport->depositSummaryParameters->summary->AmountX, $thisReport->curY, $grandTotalStr);
 
-    
+
     // Now print deposit totals by fund
     $thisReport->curY += 2 * $thisReport->depositSummaryParameters->summary->intervalY;
     if($thisReport->depositSummaryParameters->displayBillCounts)
@@ -827,45 +823,45 @@ class FinancialService
     }
     $thisReport->curX = $thisReport->depositSummaryParameters->aggregateX;
     $this->generateTotalsByFund($thisReport);
-    
-   
+
+
     $thisReport->curY += $thisReport->summaryIntervalY;
     $this->generateTotalsByCurrencyType($thisReport);
     $thisReport->curY += $thisReport->summaryIntervalY * 2;
-    
+
     $thisReport->curY +=130;
     $thisReport->curX = $thisReport->depositSummaryParameters->summary->x;
-    
+
     $this->generateWitnessSignature($thisReport);
-    
+
   }
 
   private function generateWitnessSignature($thisReport)
   {
-   
+
     $thisReport->pdf->setXY($thisReport->curX,$thisReport->curY);
     $thisReport->pdf->write(8,"Witness 1");
     $thisReport->pdf->line( $thisReport->curX+17, $thisReport->curY+8, $thisReport->curX+80, $thisReport->curY+8);
-    
-    $thisReport->curY += 10;    
+
+    $thisReport->curY += 10;
     $thisReport->pdf->setXY($thisReport->curX,$thisReport->curY);
     $thisReport->pdf->write(8,"Witness 2");
     $thisReport->pdf->line( $thisReport->curX+17, $thisReport->curY+8, $thisReport->curX+80, $thisReport->curY+8);
-    
-    $thisReport->curY += 10;    
+
+    $thisReport->curY += 10;
     $thisReport->pdf->setXY($thisReport->curX,$thisReport->curY);
     $thisReport->pdf->write(8,"Witness 3");
     $thisReport->pdf->line( $thisReport->curX+17, $thisReport->curY+8, $thisReport->curX+80, $thisReport->curY+8);
 
   }
-  
- 
-   
+
+
+
 
   function getDepositPDF($depID)
   {
-    
-   
+
+
   }
 
   function getDepositCSV($depID)
@@ -898,7 +894,7 @@ class FinancialService
     $CSVReturn->header = "Content-Disposition: attachment; filename=ChurchCRM-DepositCSV-" . $depID . "-" . date("Ymd-Gis") . ".csv";
     return $CSVReturn;
   }
-  
+
   function getCurrencyTypeOnDeposit($currencyID, $depositID) {
     $currencies = array();
     // Get the list of Currency denominations

@@ -293,7 +293,7 @@ $bOkToEdit = ($_SESSION['bEditRecords'] ||
     <div class="box box-primary box-body">
       <?php if ($bOkToEdit) { ?>
         <a href="#" class="btn btn-app" data-toggle="modal" data-target="#upload-image"><i class="fa fa-camera"></i><?= gettext("Upload Photo") ?></a>
-        <?php if ($personService->getUploadedPhoto($iPersonID) !== "") { ?>
+        <?php if ($person->getUploadedPhoto() !== "") { ?>
           <a class="btn btn-app bg-orange" href="#" data-toggle="modal" data-target="#confirm-delete-image"><i class="fa fa-remove"></i> <?= gettext("Delete Photo") ?></a>
         <?php } ?>
       <?php } ?>
@@ -777,7 +777,8 @@ $bOkToEdit = ($_SESSION['bEditRecords'] ||
     var answer = confirm("<?= gettext("Are you sure you want to remove this person from the Group") ?>");
     if (answer)
       $.ajax({
-        method: "DELETE",
+        method: "POST",
+        data:{"_METHOD":"DELETE"},
         url: window.CRM.root + "/api/groups/" + Group + "/removeuser/" + Person
       }).done(function (data) {
         location.reload();
