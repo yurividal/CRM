@@ -30,6 +30,10 @@ Update `config_cfg` set
 `cfg_type` = 'choice'
 where `cfg_id` = 1037;
 
+Update `config_cfg` set
+`cfg_value` = 0 
+where `cfg_name` = "bRegistered";
+
 delete from config_cfg where cfg_id ='1';
 delete from config_cfg where cfg_id ='18';
 delete from config_cfg where cfg_id ='2001';
