@@ -220,13 +220,13 @@ if ($output == "pdf") {
 	$curY += 3 * $pdf->incrementY;
 
 	$pdf->SetFont('Times','B', 10);
-	$pdf->WriteAt ($nameX, $curY, "Fund");
-	$pdf->PrintRightJustified ($pledgeX, $curY, "Pledges");
-	$pdf->PrintRightJustified ($paymentX, $curY, "Payments");
-	$pdf->PrintRightJustified ($pledgeCountX, $curY, "# Pledges");
-	$pdf->PrintRightJustified ($paymentCountX, $curY, "# Payments");
-	$pdf->PrintRightJustified ($underpaidX, $curY, "Overpaid");
-	$pdf->PrintRightJustified ($overpaidX, $curY, "Underpaid");
+	$pdf->WriteAt ($nameX, $curY, gettext ("Fund"));
+	$pdf->PrintRightJustified ($pledgeX, $curY, gettext ("Pledges"));
+	$pdf->PrintRightJustified ($paymentX, $curY, gettext ("Payments"));
+	$pdf->PrintRightJustified ($pledgeCountX, $curY, gettext ("# Pledges"));
+	$pdf->PrintRightJustified ($paymentCountX, $curY, gettext ("# Payments"));
+	$pdf->PrintRightJustified ($underpaidX, $curY, gettext ("Overpaid"));
+	$pdf->PrintRightJustified ($overpaidX, $curY, gettext ("Underpaid"));
 	$pdf->SetFont('Times','', 10);
 	$curY += $pdf->incrementY;
 
