@@ -296,6 +296,7 @@ class SystemService
         $version->setVersion($dbUpdate["dbVersion"]);
         $version->setUpdateStart(new \DateTime());
         foreach ($dbUpdate["scripts"] as $dbScript) {
+          SQLUtils::sqlImport(SystemURLs::getDocumentRoot()."/".$dbScript, $connection);
         }
         if (!$errorFlag)
         {
