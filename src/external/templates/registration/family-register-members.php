@@ -14,7 +14,7 @@ require(__DIR__ . "/../../../Include/HeaderNotLoggedIn.php");
         <div class="box box-solid">
           <div class="box-header with-border">
             <h3
-              class="box-title"><?= gettext("Register") . " <b>" . $family->getName() . "</b> " . gettext("family members") ?></h3>
+              class="box-title"><?= gettext("Register") . " <b>" . $family->getName() . "</b> " . gettext("Family Members") ?></h3>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -95,7 +95,7 @@ require(__DIR__ . "/../../../Include/HeaderNotLoggedIn.php");
                           <div class="input-group-addon">
                             <i class="fa fa-birthday-cake"></i>
                           </div>
-                          <input type="text" class="form-control inputDatePicker" name="memberBirthday-<?= $x ?>">
+                          <input type="text" class="form-control" name="memberBirthday-<?= $x ?>">
                         </div>
                       </div>
                       <div class="col-lg-6">

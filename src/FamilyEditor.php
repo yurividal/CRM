@@ -20,6 +20,7 @@ require "Include/CanvassUtilities.php";
 require "Include/GeoCoder.php";
 
 use ChurchCRM\Note;
+use ChurchCRM\dto\SystemConfig;
 
 //Set the page title
 $sPageTitle = gettext("Family Editor");
@@ -41,7 +42,7 @@ if ($iFamilyID > 0)
 	}
 
 	$sSQL = "SELECT fam_ID FROM family_fam WHERE fam_ID = " . $iFamilyID;
-	if (mysql_num_rows(RunQuery($sSQL)) == 0)
+	if (mysqli_num_rows(RunQuery($sSQL)) == 0)
 	{
 		Redirect("Menu.php");
 		exit;
@@ -64,13 +65,13 @@ $rsBraveCanvassers = CanvassGetCanvassers (gettext ("BraveCanvassers"));
 // Get the list of custom person fields
 $sSQL = "SELECT family_custom_master.* FROM family_custom_master ORDER BY fam_custom_Order";
 $rsCustomFields = RunQuery($sSQL);
-$numCustomFields = mysql_num_rows($rsCustomFields);
+$numCustomFields = mysqli_num_rows($rsCustomFields);
 
 // Get Field Security List Matrix
 $sSQL = "SELECT * FROM list_lst WHERE lst_ID = 5 ORDER BY lst_OptionSequence";
 $rsSecurityGrp = RunQuery($sSQL);
 
-while ($aRow = mysql_fetch_array($rsSecurityGrp))
+while ($aRow = mysqli_fetch_array($rsSecurityGrp))
 {
 	extract ($aRow);
 	$aSecurityType[$lst_OptionID] = $lst_OptionName;
@@ -102,7 +103,7 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 	$sZip = FilterInput($_POST["Zip"]);
 
 	// bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
-	if($cfgForceUppercaseZip)$sZip=strtoupper($sZip);
+	if(SystemConfig::getValue("cfgForceUppercaseZip"))$sZip=strtoupper($sZip);
 
 	$sCountry = FilterInput($_POST["Country"]);
 	$iFamilyMemberRows = FilterInput($_POST["FamCount"]);
@@ -232,13 +233,13 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 	//Did they enter a name?
 	if (strlen($sName) < 1)
 	{
-		$sNameError = gettext("You must enter a Name.");
+		$sNameError = gettext("You must enter a name");
 		$bErrorFlag = True;
 
 	}
 
 	// Validate Wedding Date if one was entered
-	if ((strlen($dWeddingDate) > 0) && ($dWeddingDate != "0000-00-00")) {
+	if ((strlen($dWeddingDate) > 0) && ($dWeddingDate != "")) {
 		$dateString = parseAndValidateDate($dWeddingDate, $locale = "<?= $localeInfo->getCountryCode() ?>", $pasfut = "past");
 		if ( $dateString === FALSE ) {
 			$sWeddingDateError = "<span style=\"color: red; \">"
@@ -265,7 +266,7 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 
 	// Validate all the custom fields
 	$aCustomData = array();
-	while ( $rowCustomField = mysql_fetch_array($rsCustomFields, MYSQL_BOTH) )
+	while ( $rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH) )
 	{
 		extract($rowCustomField);
 
@@ -377,7 +378,7 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 			//Get the key back
 			$sSQL = "SELECT MAX(fam_ID) AS iFamilyID FROM family_fam";
 			$rsLastEntry = RunQuery($sSQL);
-			extract(mysql_fetch_array($rsLastEntry));
+			extract(mysqli_fetch_array($rsLastEntry));
 
 			$sSQL = "INSERT INTO `family_custom` (`fam_ID`) VALUES ('" . $iFamilyID . "')";
 			RunQuery($sSQL);
@@ -439,15 +440,22 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 								$aBirthYears[$iCount],
 								$aClassification[$iCount])";
 					RunQuery($sSQL);
+          $dbPersonId = mysqli_insert_id($cnInfoCentral);
+          $note = new Note();
+          $note->setPerId($dbPersonId);
+          $note->setText(gettext("Created via Family"));
+          $note->setType("create");
+          $note->setEntered($_SESSION['iUserID']);
+          $note->save();
 					$sSQL = "INSERT INTO person_custom (per_ID) VALUES ("
-								. mysql_insert_id() . ")";
+								. $dbPersonId . ")";
 					RunQuery($sSQL);
 					RunQuery("UNLOCK TABLES");
 				}
 			}
 			$note = new Note();
 			$note->setFamId($iFamilyID);
-			$note->setText("Created");
+			$note->setText(gettext("Created"));
 			$note->setType("create");
 			$note->setEntered($_SESSION['iUserID']);
 			$note->save();
@@ -475,11 +483,17 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 					$sSQL = "UPDATE person_per SET per_FirstName='" . $aFirstNames[$iCount] . "', per_MiddleName='" . $aMiddleNames[$iCount] . "',per_LastName='" . $aLastNames[$iCount] . "',per_Suffix='" . $aSuffix[$iCount] . "',per_Gender='" . $aGenders[$iCount] . "',per_fmr_ID='" . $aRoles[$iCount] . "',per_BirthMonth='" . $aBirthMonths[$iCount] . "',per_BirthDay='" . $aBirthDays[$iCount] . "', " . $sBirthYearScript . "per_cls_ID='" . $aClassification[$iCount] . "' WHERE per_ID=" . $aPersonIDs[$iCount];
 					RunQuery($sSQL);
 					//RunQuery("UNLOCK TABLES");
+          $note = new Note();
+          $note->setPerId($aPersonIDs[$iCount]);
+          $note->setText(gettext("Updated via Family"));
+          $note->setType("edit");
+          $note->setEntered($_SESSION['iUserID']);
+          $note->save();
 				}
 			}
 			$note = new Note();
 			$note->setFamId($iFamilyID);
-			$note->setText("Updated");
+			$note->setText(gettext("Updated"));
 			$note->setType("edit");
 			$note->setEntered($_SESSION['iUserID']);
 			$note->save();
@@ -489,9 +503,9 @@ if (isset($_POST["FamilySubmit"]) || isset($_POST["FamilySubmitAndAdd"]))
 		if ($numCustomFields > 0)
 		{
 			$sSQL = "REPLACE INTO family_custom SET ";
-			mysql_data_seek($rsCustomFields,0);
+			mysqli_data_seek($rsCustomFields,0);
 
-			while ( $rowCustomField = mysql_fetch_array($rsCustomFields, MYSQL_BOTH) )
+			while ( $rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH) )
 			{
 				extract($rowCustomField);
 				if (($aSecurityType[$fam_custom_FieldSec] == 'bAll') || ($_SESSION[$aSecurityType[$fam_custom_FieldSec]]))
@@ -533,7 +547,7 @@ else
 		//Get the information on this family
 		$sSQL = "SELECT * FROM family_fam WHERE fam_ID = " . $iFamilyID;
 		$rsFamily = RunQuery($sSQL);
-		extract(mysql_fetch_array($rsFamily));
+		extract(mysqli_fetch_array($rsFamily));
 
 		$iFamilyID = $fam_ID;
 		$sName = $fam_Name;
@@ -561,13 +575,13 @@ else
 
 		$sSQL = "SELECT * FROM family_custom WHERE fam_ID = " . $iFamilyID;
 		$rsCustomData = RunQuery($sSQL);
-		$aCustomData = mysql_fetch_array($rsCustomData, MYSQL_BOTH);
+		$aCustomData = mysqli_fetch_array($rsCustomData, MYSQLI_BOTH);
 
 		$aCustomErrors = array();
 
 		if ($numCustomFields >0) {
-			mysql_data_seek($rsCustomFields,0);
-			while ($rowCustomField = mysql_fetch_array($rsCustomFields, MYSQL_BOTH) ) {
+			mysqli_data_seek($rsCustomFields,0);
+			while ($rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH) ) {
 				$aCustomErrors[$rowCustomField['fam_custom_Field']] = false;
 			}
 		}
@@ -576,7 +590,7 @@ else
 		$rsMembers = RunQuery($sSQL);
 		$iCount = 0;
 		$iFamilyMemberRows = 0;
-		while ($aRow = mysql_fetch_array($rsMembers))
+		while ($aRow = mysqli_fetch_array($rsMembers))
 		{
 			extract($aRow);
 			$iCount++;
@@ -602,9 +616,9 @@ else
 	{
 		//Adding....
 		//Set defaults
-		$sCity = $sDefaultCity;
-		$sCountry = $sDefaultCountry;
-		$sState = $sDefaultState;
+		$sCity = SystemConfig::getValue("sDefaultCity");
+		$sCountry = SystemConfig::getValue("sDefaultCountry");
+		$sState = SystemConfig::getValue("sDefaultState");
 		$iClassification = "0";
 		$iFamilyMemberRows = 6;
 		$bOkToCanvass = 1;
@@ -648,8 +662,8 @@ else
 		$aCustomData = array ();
 		$aCustomErrors = array ();
 		if ($numCustomFields > 0) {
-			mysql_data_seek($rsCustomFields,0);
-			while ( $rowCustomField = mysql_fetch_array($rsCustomFields, MYSQL_BOTH) ) {
+			mysqli_data_seek($rsCustomFields,0);
+			while ( $rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH) ) {
 				extract($rowCustomField);
 				$aCustomData[$fam_custom_Field] = '';
 				$aCustomErrors[$fam_custom_Field] = false;
@@ -669,14 +683,14 @@ require "Include/Header.php";
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext("Family Info") ?></h3>
 			<div class="pull-right"><br/>
-				<input type="submit" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit"  class="form-control">
+				<input type="submit" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit">
 			</div>
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-6">
-						<label><?= gettext("Family Name:") ?></label>
+						<label><?= gettext("Family Name") ?>:</label>
 						<input type="text" Name="Name" id="FamilyName" value="<?= htmlentities(stripslashes($sName), ENT_NOQUOTES, "UTF-8") ?>" maxlength="48"  class="form-control">
 						<?php if ($sNameError) { ?><font color="red"><?= $sNameError ?></font><?php } ?>
 					</div>
@@ -684,15 +698,15 @@ require "Include/Header.php";
 				<p/>
 				<div class="row">
 					<div class="col-md-6">
-						<label><?= gettext("Address1:") ?></label>
+						<label><?= gettext("Address") ?> 1:</label>
 							<input type="text" Name="Address1" value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, "UTF-8") ?>" size="50" maxlength="250"  class="form-control">
 					</div>
 					<div class="col-md-6">
-						<label><?= gettext("Address2:") ?></label>
+						<label><?= gettext("Address") ?> 2:</label>
 						<input type="text" Name="Address2" value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, "UTF-8") ?>" size="50" maxlength="250"  class="form-control">
 					</div>
 					<div class="col-md-6">
-						<label><?= gettext("City:") ?></label>
+						<label><?= gettext("City") ?>:</label>
 						<input type="text" Name="City" value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, "UTF-8") ?>" maxlength="50"  class="form-control">
 					</div>
 				</div>
@@ -702,43 +716,43 @@ require "Include/Header.php";
 						<label for="StatleTextBox">
 						<?php
 						if($sCountry == "Canada") {
-							echo gettext("Province:");
+							echo gettext("Province").":";
 						}else{
-							echo gettext("State:");
+							echo gettext("State").":";
 						} ?>
 						</label>
 						<?php require "Include/StateDropDown.php"; ?>
 					</div>
 					<div class="form-group col-md-3">
-						<label><?= gettext("None US/CND State:") ?></label>
+						<label><?= gettext("None US/CND State") ?>:</label>
 						<input type="text"  class="form-control" name="StateTextbox" value="<?php if ($sCountry != "United States" && $sCountry != "Canada") echo htmlentities(stripslashes($sState),ENT_NOQUOTES, "UTF-8"); ?>" size="20" maxlength="30">
 					</div>
 					<div class="form-group col-md-3">
 						<label> <?php if($sCountry == "Canada")
-							  echo gettext("Postal Code:");
+							  echo gettext("Postal Code").":";
 							else
-							  echo gettext("Zip:");
+							  echo gettext("Zip").":";
 							?></label>
 						<input type="text" Name="Zip"  class="form-control" <?php
 							// bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
-							if($cfgForceUppercaseZip)echo 'style="text-transform:uppercase" ';
+							if(SystemConfig::getValue("cfgForceUppercaseZip"))echo 'style="text-transform:uppercase" ';
 							echo 'value="' . htmlentities(stripslashes($sZip), ENT_NOQUOTES, "UTF-8") . '" '; ?>
 							maxlength="10" size="8">
 					</div>
 					<div class="form-group col-md-3">
-						<label> <?= gettext("Country:") ?></label>
+						<label> <?= gettext("Country") ?>:</label>
 						<?php require "Include/CountryDropDown.php" ?>
 					</div>
 				</div>
-				<?php if (!$bHideLatLon) { /* Lat/Lon can be hidden - General Settings */
+				<?php if (!SystemConfig::getValue("bHideLatLon")) { /* Lat/Lon can be hidden - General Settings */
 					if (!$bHaveXML) { // No point entering if values will just be overwritten ?>
 				<div class="row">
 					<div class="form-group col-md-3">
-						<label><?= gettext("Latitude:") ?></label>
+						<label><?= gettext("Latitude") ?>:</label>
 						<input type="text" class="form-control" Name="Latitude" value="<?= $nLatitude ?>" size="30" maxlength="50">
 					</div>
 					<div class="form-group col-md-3">
-						<label><?= gettext("Longitude:") ?></label>
+						<label><?= gettext("Longitude") ?>:</label>
 						<input type="text" class="form-control" Name="Longitude" value="<?= $nLongitude ?>" size="30" maxlength="50">
 					</div>
 				</div>
@@ -757,39 +771,39 @@ require "Include/Header.php";
 		<div class="box-body">
 			<div class="row">
 				<div class="form-group col-md-6">
-					<label><?= gettext("Home Phone:") ?></label>
+					<label><?= gettext("Home Phone") ?>:</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<i class="fa fa-phone"></i>
 						</div>
-						<input type="text" Name="HomePhone" value="<?= htmlentities(stripslashes($sHomePhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+						<input type="text" Name="HomePhone" value="<?= htmlentities(stripslashes($sHomePhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask='"mask": "<?= SystemConfig::getValue("sPhoneFormat")?>"' data-mask>
 						<input type="checkbox" name="NoFormat_HomePhone" value="1" <?php if ($bNoFormat_HomePhone) echo " checked";?>><?= gettext("Do not auto-format") ?>
 					</div>
 				</div>
 				<div class="form-group col-md-6">
-					<label><?= gettext("Work Phone:") ?></label>
+					<label><?= gettext("Work Phone") ?>:</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<i class="fa fa-phone"></i>
 						</div>
-						<input type="text" name="WorkPhone" value="<?= htmlentities(stripslashes($sWorkPhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask/>
+						<input type="text" name="WorkPhone" value="<?= htmlentities(stripslashes($sWorkPhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask='"mask": "<?= SystemConfig::getValue("sPhoneFormatWithExt")?>"' data-mask/>
 						<input type="checkbox" name="NoFormat_WorkPhone" value="1" <?= $bNoFormat_WorkPhone ? " checked" : ''?>><?= gettext("Do not auto-format") ?>
 					</div>
 				</div>
 				<div class="form-group col-md-6">
-					<label><?= gettext("Mobile Phone:") ?></label>
+					<label><?= gettext("Mobile Phone") ?>:</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<i class="fa fa-phone"></i>
 						</div>
-						<input type="text" name="CellPhone" value="<?= htmlentities(stripslashes($sCellPhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+						<input type="text" name="CellPhone" value="<?= htmlentities(stripslashes($sCellPhone)) ?>" size="30" maxlength="30" class="form-control" data-inputmask='"mask": "<?= SystemConfig::getValue("sPhoneFormat")?>"' data-mask>
 						<input type="checkbox" name="NoFormat_CellPhone" value="1" <?= $bNoFormat_CellPhone ? " checked" : '' ?>><?= gettext("Do not auto-format") ?>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="form-group col-md-6">
-					<label><?= gettext("Email:") ?></label>
+					<label><?= gettext("Email") ?>:</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<i class="fa fa-envelope"></i>
@@ -797,9 +811,9 @@ require "Include/Header.php";
 						<input type="text" Name="Email" class="form-control" value="<?= htmlentities(stripslashes($sEmail)) ?>" size="30" maxlength="100"><font color="red"><?php echo "<BR>" . $sEmailError ?></font>
 					</div>
 				</div>
-				<?php if (!$bHideFamilyNewsletter) { /* Newsletter can be hidden - General Settings */ ?>
+				<?php if (!SystemConfig::getValue("bHideFamilyNewsletter")) { /* Newsletter can be hidden - General Settings */ ?>
 				<div class="form-group col-md-4">
-					<label><?= gettext("Send Newsletter:") ?></label><br/>
+					<label><?= gettext("Send Newsletter") ?>:</label><br/>
 					<input type="checkbox" Name="SendNewsLetter" value="1" <?php if ($bSendNewsLetter) echo " checked"; ?>>
 				</div>
 				<?php } ?>
@@ -808,17 +822,17 @@ require "Include/Header.php";
 	</div>
 	<div class="box box-info clearfix">
 		<div class="box-header">
-			<h3 class="box-title"><?= gettext("Other Info:") ?></h3>
+			<h3 class="box-title"><?= gettext("Other Info") ?>:</h3>
 			<div class="pull-right"><br/>
-				<input type="submit" class="form-control" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit">
+				<input type="submit" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit">
 			</div>
 		</div><!-- /.box-header -->
 		<div class="box-body">
-			<?php if (!$bHideWeddingDate) { /* Wedding Date can be hidden - General Settings */
-				if ($dWeddingDate == "0000-00-00" || $dWeddingDate == "NULL") $dWeddingDate = ""; ?>
+			<?php if (!SystemConfig::getValue("bHideWeddingDate")) { /* Wedding Date can be hidden - General Settings */
+				if ($dWeddingDate == "NULL") $dWeddingDate = ""; ?>
 				<div class="row">
 					<div class="form-group col-md-4">
-						<label><?= gettext("Wedding Date:") ?></label>
+                        <label><?= gettext("Wedding Date") ?>:</label>
 						<input type="text" class="form-control date-picker" Name="WeddingDate" value="<?= $dWeddingDate ?>" maxlength="12" id="WeddingDate" size="15">
 						<?php if ($sWeddingDateError) { ?> <span style="color: red"><br/><?php $sWeddingDateError ?></span> <?php } ?>
 					</div>
@@ -827,17 +841,17 @@ require "Include/Header.php";
 			<div class="row">
 				<?php if ($_SESSION['bCanvasser']) { // Only show this field if the current user is a canvasser ?>
 					<div class="form-group col-md-4">
-						<label><?= gettext("Ok To Canvass:") ?> </label><br/>
+						<label><?= gettext("Ok To Canvass") ?>: </label><br/>
 						<input type="checkbox" Name="OkToCanvass" value="1" <?php if ($bOkToCanvass) echo " checked "; ?> >
 					</div>
 				<?php }
 
-				if ($rsCanvassers <> 0 && mysql_num_rows($rsCanvassers) > 0)  { ?>
+				if ($rsCanvassers <> 0 && mysqli_num_rows($rsCanvassers) > 0)  { ?>
 				<div class="form-group col-md-4">
-					<label><?= gettext("Assign a Canvasser:") ?></label>
+					<label><?= gettext("Assign a Canvasser") ?>:</label>
 					<?php // Display all canvassers
 					echo "<select name='Canvasser' class=\"form-control\"><option value=\"0\">None selected</option>";
-					while ($aCanvasser = mysql_fetch_array($rsCanvassers))  {
+					while ($aCanvasser = mysqli_fetch_array($rsCanvassers))  {
 						echo "<option value=\"" . $aCanvasser["per_ID"] . "\"";
 						if ($aCanvasser["per_ID"]==$iCanvasser)
 							echo " selected";
@@ -848,13 +862,13 @@ require "Include/Header.php";
 					echo "</select></div>";
 				}
 
-				if ($rsBraveCanvassers <> 0 && mysql_num_rows($rsBraveCanvassers) > 0)  { ?>
+				if ($rsBraveCanvassers <> 0 && mysqli_num_rows($rsBraveCanvassers) > 0)  { ?>
 					<div class="form-group col-md-4">
-						<label><?= gettext("Assign a Brave Canvasser:") ?> </label>
+						<label><?= gettext("Assign a Brave Canvasser") ?>: </label>
 
 						<?php // Display all canvassers
 						echo "<select name='BraveCanvasser' class=\"form-control\"><option value=\"0\">None selected</option>";
-						while ($aBraveCanvasser = mysql_fetch_array($rsBraveCanvassers)) {
+						while ($aBraveCanvasser = mysqli_fetch_array($rsBraveCanvassers)) {
 							echo "<option value=\"" . $aBraveCanvasser["per_ID"] . "\"";
 							if ($aBraveCanvasser["per_ID"]==$iCanvasser)
 								echo " selected";
@@ -867,18 +881,18 @@ require "Include/Header.php";
 			</div>
 		</div>
 	</div>
-	<?php if ($bUseDonationEnvelopes) { /* Donation envelopes can be hidden - General Settings */ ?>
+	<?php if (SystemConfig::getValue("bUseDonationEnvelopes")) { /* Donation envelopes can be hidden - General Settings */ ?>
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3><?= gettext("Envelope Info") ?></h3>
 			<div class="pull-right"><br/>
-				<input type="submit" class="form-control" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit">
+				<input type="submit" class="btn btn-primary" value="<?= gettext("Save") ?>" name="FamilySubmit">
 			</div>
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<div class="row">
 				<div class="form-group col-md-4">
-					<label><?= gettext("Envelope number:") ?></label>
+					<label><?= gettext("Envelope Number") ?>:</label>
 					<input type="text" Name="Envelope" <?php if($fam_Envelope) echo " value=\"" . $fam_Envelope; ?>" size="30" maxlength="50">
 				</div>
 			</div>
@@ -894,8 +908,8 @@ require "Include/Header.php";
 			</div>
 		</div><!-- /.box-header -->
 		<div class="box-body">
-		<?php mysql_data_seek($rsCustomFields,0);
-		while ( $rowCustomField = mysql_fetch_array($rsCustomFields, MYSQL_BOTH) ) {
+		<?php mysqli_data_seek($rsCustomFields,0);
+		while ( $rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH) ) {
 			extract($rowCustomField);
 			if (($aSecurityType[$fam_custom_FieldSec] == 'bAll') || ($_SESSION[$aSecurityType[$fam_custom_FieldSec]])) { ?>
 			<div class="row">
@@ -949,10 +963,10 @@ require "Include/Header.php";
 		//Get family roles
 		$sSQL = "SELECT * FROM list_lst WHERE lst_ID = 2 ORDER BY lst_OptionSequence";
 		$rsFamilyRoles = RunQuery($sSQL);
-		$numFamilyRoles = mysql_num_rows($rsFamilyRoles);
+		$numFamilyRoles = mysqli_num_rows($rsFamilyRoles);
 		for($c=1; $c <= $numFamilyRoles; $c++)
 		{
-			$aRow = mysql_fetch_array($rsFamilyRoles);
+			$aRow = mysqli_fetch_array($rsFamilyRoles);
 			extract($aRow);
 			$aFamilyRoleNames[$c] = $lst_OptionName;
 			$aFamilyRoleIDs[$c] = $lst_OptionID;
@@ -1051,7 +1065,7 @@ require "Include/Header.php";
 					$rsClassifications = RunQuery($sSQL);
 
 					//Display Classifications
-					while ($aRow = mysql_fetch_array($rsClassifications))
+					while ($aRow = mysqli_fetch_array($rsClassifications))
 					{
 						extract($aRow);
 						echo "<option value=\"" . $lst_OptionID . "\"";
@@ -1067,8 +1081,8 @@ require "Include/Header.php";
 	echo "<td colspan=\"2\" align=\"center\">";
 	echo "<input type=\"hidden\" Name=\"UpdateBirthYear\" value=\"".$UpdateBirthYear."\">";
 
-	echo "<input type=\"submit\" class=\"btn\" value=\"" . gettext("Save") . "\" Name=\"FamilySubmit\"> ";
-	if ($_SESSION['bAddRecords']) { echo " <input type=\"submit\" class=\"btn\" value=\"".gettext("Save and Add")."\" name=\"FamilySubmitAndAdd\"> "; }
+	echo "<input type=\"submit\" class=\"btn btn-primary\" value=\"" . gettext("Save") . "\" Name=\"FamilySubmit\"> ";
+	if ($_SESSION['bAddRecords']) { echo " <input type=\"submit\" class=\"btn btn-info\" value=\"".gettext("Save and Add")."\" name=\"FamilySubmitAndAdd\"> "; }
 	echo " <input type=\"button\" class=\"btn\" value=\"" . gettext("Cancel") . "\" Name=\"FamilyCancel\"";
 	if ($iFamilyID > 0)
 		echo " onclick=\"javascript:document.location='FamilyView.php?FamilyID=$iFamilyID';\">";

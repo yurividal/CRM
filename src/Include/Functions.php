@@ -2,6 +2,7 @@
 
 use ChurchCRM\Service\PersonService;
 use ChurchCRM\Service\SystemService;
+use ChurchCRM\dto\SystemConfig;
 
 /*******************************************************************************
  *
@@ -33,7 +34,7 @@ use ChurchCRM\Service\SystemService;
 
 // Set the current version of this PHP file
 // Important!  These must be updated before every software release.
-
+use ChurchCRM\dto\SystemURLs;
 $personService = new PersonService();
 $systemService = new SystemService();
 $_SESSION['sSoftwareInstalledVersion'] = $systemService->getInstalledVersion();
@@ -50,16 +51,9 @@ if (empty($bSuppressSessionTests))  // This is used for the login page only.
     exit;
   }
 
-  // Basic security: If $sRootPath has changed we have changed databases without logging in
-  // redirect to the login page
-  if ($_SESSION['sRootPath'] !== $sRootPath) {
-    Redirect("Login.php");
-    exit;
-  }
-
   // Check for login timeout.  If login has expired, redirect to login page
-  if ($sSessionTimeout > 0) {
-    if ((time() - $_SESSION['tLastOperation']) > $sSessionTimeout) {
+  if (SystemConfig::getValue("sSessionTimeout") > 0) {
+    if ((time() - $_SESSION['tLastOperation']) > SystemConfig::getValue("sSessionTimeout")) {
       Redirect("Login.php?Timeout");
       exit;
     } else {
@@ -87,35 +81,6 @@ if (empty($bSuppressSessionTests))  // This is used for the login page only.
 }
 // End of basic security checks
 
-// check if bLockURL is set and if so if the current page is accessed via an allowed URL
-function checkAllowedURL()
-{
-  global $bLockURL, $URL;
-
-  if (isset($bLockURL) && ($bLockURL === TRUE)) {
-    // get the URL of this page
-    $currentURL = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-    // chop off the query string
-    $currentURL = explode('?', $currentURL)[0];
-
-    // check if this matches any one of teh whitelisted login URLS
-    $validURL = false;
-    foreach ($URL as $value) {
-      $base = substr($value, 0, -strlen('/'));
-      if (strpos($currentURL, $value) === 0) {
-        $validURL = true;
-        break;
-      }
-    }
-
-    // jump to the first whitelisted url (TODO: maybe pick a ranodm URL?)
-    if (!$validURL) {
-      header('Location: ' . $URL[0]);
-      exit;
-    }
-  }
-}
 
 function deletePhotos($type, $id)
 {
@@ -178,7 +143,7 @@ if (isset($_GET["Registered"])) {
 }
 
 if (isset($_GET["AllPDFsEmailed"])) {
-  $sGlobalMessage = gettext("PDFs successfully emailed " . $_GET["AllPDFsEmailed"] . " families.");
+  $sGlobalMessage = gettext("PDFs successfully emailed ") . $_GET["AllPDFsEmailed"] . " " . gettext("families.");
 }
 
 if (isset($_GET["PDFEmailed"])) {
@@ -265,7 +230,6 @@ if (isset($_POST["BulkAddToCart"])) {
 function RedirectURL($sRelativeURL)
 {
   global $sRootPath;
-  global $sDocumentRoot;
 
   // Test if file exists before redirecting.  May need to remove
   // query string first.
@@ -280,7 +244,7 @@ function RedirectURL($sRelativeURL)
   //     $sFullPath = $sDocumentRoot . $sRootPath . $sPathExtension
   // The Redirect URL is then in this form:
   //     $sRedirectURL = $sRootPath . $sPathExtension
-  $sFullPath = str_replace('\\', '/', $sDocumentRoot . '/' . $sPathExtension);
+  $sFullPath = str_replace('\\', '/', SystemURLs::getDocumentRoot() . '/' . $sPathExtension);
 
   // With the query string removed we can test if file exists
   if (file_exists($sFullPath) && is_readable($sFullPath)) {
@@ -288,8 +252,8 @@ function RedirectURL($sRelativeURL)
   } else {
     $sErrorMessage = 'Fatal Error: Cannot access file: ' . $sFullPath . "<br>\n"
       . "\$sPathExtension = $sPathExtension<br>\n"
-      . "\$sDocumentRoot = $sDocumentRoot<br>\n"
-      . "\$_SESSION['sRootPath'] = "
+      . "\$sDocumentRoot = SystemURLs::getDocumentRoot()<br>\n"
+      . "\$sRootPath = "
       . $sRootPath . "<br>\n";
 
     die ($sErrorMessage);
@@ -307,12 +271,11 @@ function Redirect($sRelativeURL)
 // Returns the current fiscal year
 function CurrentFY()
 {
-  global $iFYMonth;
 
   $yearNow = date("Y");
   $monthNow = date("m");
   $FYID = $yearNow - 1996;
-  if ($monthNow >= $iFYMonth && $iFYMonth > 1)
+  if ($monthNow >= SystemConfig::getValue("iFYMonth") && SystemConfig::getValue("iFYMonth") > 1)
     $FYID += 1;
   return ($FYID);
 }
@@ -336,10 +299,10 @@ function PrintFYIDSelect($iFYID, $selectName)
 // Formats a fiscal year string
 function MakeFYString($iFYID)
 {
-  global $iFYMonth;
+  
   $monthNow = date("m");
 
-  if ($iFYMonth == 1)
+  if (SystemConfig::getValue("iFYMonth") == 1)
     return (1996 + $iFYID);
   else
     return (1995 + $iFYID . "/" . substr(1996 + $iFYID, 2, 2));
@@ -350,13 +313,12 @@ function MakeFYString($iFYID)
 function RunQuery($sSQL, $bStopOnError = true)
 {
   global $cnInfoCentral;
-  global $debug;
 
-  if ($result = mysql_query($sSQL, $cnInfoCentral))
+  if ($result = mysqli_query($cnInfoCentral, $sSQL))
     return $result;
   elseif ($bStopOnError) {
-    if ($debug)
-      die(gettext("Cannot execute query.") . "<p>$sSQL<p>" . mysql_error());
+    if (SystemConfig::getValue("debug"))
+      die(gettext("Cannot execute query.") . "<p>$sSQL<p>" . mysqli_error());
     else
       die("Database error or invalid data");
   } else
@@ -373,9 +335,10 @@ function FilterInputArr($arr, $key, $type = 'string', $size = 1)
 
 // Sanitizes user input as a security measure
 // Optionally, a filtering type and size may be specified.  By default, strip any tags from a string.
-// Note that a database connection must already be established for the mysql_real_escape_string function to work.
+// Note that a database connection must already be established for the mysqli_real_escape_string function to work.
 function FilterInput($sInput, $type = 'string', $size = 1)
 {
+  global $cnInfoCentral;
   if (strlen($sInput) > 0) {
     switch ($type) {
       case 'string':
@@ -383,19 +346,19 @@ function FilterInput($sInput, $type = 'string', $size = 1)
         $sInput = strip_tags(trim($sInput));
         if (get_magic_quotes_gpc())
           $sInput = stripslashes($sInput);
-        $sInput = mysql_real_escape_string($sInput);
+        $sInput = mysqli_real_escape_string($cnInfoCentral, $sInput);
         return $sInput;
       case 'htmltext':
-        $sInput = strip_tags(trim($sInput), '<a><b><i><u>');
+        $sInput = strip_tags(trim($sInput), '<a><b><i><u><h1><h2><h3><h4><h5><h6>');
         if (get_magic_quotes_gpc())
           $sInput = stripslashes($sInput);
-        $sInput = mysql_real_escape_string($sInput);
+        $sInput = mysqli_real_escape_string($cnInfoCentral, $sInput);
         return $sInput;
       case 'char':
         $sInput = substr(trim($sInput), 0, $size);
         if (get_magic_quotes_gpc())
           $sInput = stripslashes($sInput);
-        $sInput = mysql_real_escape_string($sInput);
+        $sInput = mysqli_real_escape_string($cnInfoCentral, $sInput);
         return $sInput;
       case 'int':
         return (int)intval(trim($sInput));
@@ -453,12 +416,11 @@ function ConvertCartToString($aCartArray)
 
 function SelectWhichInfo($sPersonInfo, $sFamilyInfo, $bFormat = false)
 {
-  global $bShowFamilyData;
 
   $finalData = "";
   $isFamily = false;
 
-  if ($bShowFamilyData) {
+  if (SystemConfig::getValue("bShowFamilyData")) {
     if ($sPersonInfo != "") {
       $finalData = $sPersonInfo;
     } elseif ($sFamilyInfo != "") {
@@ -483,9 +445,8 @@ function SelectWhichInfo($sPersonInfo, $sFamilyInfo, $bFormat = false)
 //
 function SelectWhichAddress(&$sReturnAddress1, &$sReturnAddress2, $sPersonAddress1, $sPersonAddress2, $sFamilyAddress1, $sFamilyAddress2, $bFormat = false)
 {
-  global $bShowFamilyData;
 
-  if ($bShowFamilyData) {
+  if (SystemConfig::getValue("bShowFamilyData")) {
 
     if ($bFormat) {
       $sFamilyInfoBegin = "<span style='color: red;'>";
@@ -565,7 +526,7 @@ function AddGroupToPeopleCart($iGroupID)
   $rsGroupMembers = RunQuery($sSQL);
 
   //Loop through the recordset
-  while ($aRow = mysql_fetch_array($rsGroupMembers)) {
+  while ($aRow = mysqli_fetch_array($rsGroupMembers)) {
     extract($aRow);
 
     //Add each person to the cart
@@ -579,7 +540,7 @@ function AddFamilyToPeopleCart($iFamID)
   $rsFamilyMembers = RunQuery($sSQL);
 
   //Loop through the recordset
-  while ($aRow = mysql_fetch_array($rsFamilyMembers)) {
+  while ($aRow = mysqli_fetch_array($rsFamilyMembers)) {
     extract($aRow);
 
     //Add each person to the cart
@@ -624,7 +585,7 @@ function RemoveGroupFromPeopleCart($iGroupID)
   $rsGroupMembers = RunQuery($sSQL);
 
   //Loop through the recordset
-  while ($aRow = mysql_fetch_array($rsGroupMembers)) {
+  while ($aRow = mysqli_fetch_array($rsGroupMembers)) {
     extract($aRow);
 
     //remove each person from the cart
@@ -663,7 +624,7 @@ function FormatDate($dDate, $bWithTime = FALSE)
     . "DAYOFMONTH('$dDate') as dm, YEAR('$dDate') as y, "
     . "DATE_FORMAT('$dDate', '%k') as h, "
     . "DATE_FORMAT('$dDate', ':%i') as m";
-  extract(mysql_fetch_array(RunQuery($sSQL)));
+  extract(mysqli_fetch_array(RunQuery($sSQL)));
 
   $month = gettext("$mn"); // Allow for translation of 3 character month abbr
 
@@ -811,24 +772,11 @@ function ExpandPhoneNumber($sPhoneNumber, $sPhoneCountry, &$bWeird)
   }
 }
 
-
-//
-// Prints age in years, or in months if less than one year old
-//
-function PrintAge($Month, $Day, $Year, $Flags)
-{
-  echo FormatAge($Month, $Day, $Year, $Flags);
-}
-
-//
-// Formats an age string: age in years, or in months if less than one year old
-//
 function FormatAge($Month, $Day, $Year, $Flags)
 {
   if (($Flags & 1)) //||!$_SESSION['bSeePrivacyData']
   {
     return;
-
   }
 
   if ($Year > 0) {
@@ -856,6 +804,54 @@ function FormatAge($Month, $Day, $Year, $Flags)
       return (date("Y") - $Year . " " . gettext("yrs old"));
   } else
     return (gettext("Unknown"));
+}
+
+function BirthDate($year, $month, $day, $hideAge) {
+  if (!is_null($day) && $day != "" &&
+    !is_null($month) && $month != ""
+  ) {
+
+    $birthYear = $year;
+    if ($hideAge) {
+      $birthYear = 1900;
+    }
+
+    return date_create($birthYear . "-" . $month . "-" . $day);
+  }
+
+  return date_create();
+}
+
+//
+// Formats an age suffix: age in years, or in months if less than one year old
+//
+function FormatAgeSuffix($birthDate, $Flags)
+{
+  if ($Flags == 1)
+  {
+    return "";
+  }
+
+  $ageSuffix = gettext("Unknown");
+
+  $now = new DateTime();
+  $age = $now->diff($birthDate);
+
+  if($age->y < 1) {
+    if($age->m > 1) {
+      $ageSuffix = gettext("mos old");
+    } else {
+      $ageSuffix = gettext("mo old");
+    }
+  } else {
+    if($age->y > 1) {
+      $ageSuffix = gettext("yrs old");
+    } else {
+      $ageSuffix = gettext("yr old");
+    }
+  }
+
+  return $ageSuffix;
 }
 
 // Returns a string of a person's full name, formatted as specified by $Style
@@ -978,7 +974,7 @@ function displayCustomField($type, $data, $special)
       if ($data > 0) {
         $sSQL = "SELECT per_FirstName, per_LastName FROM person_per WHERE per_ID =" . $data;
         $rsTemp = RunQuery($sSQL);
-        extract(mysql_fetch_array($rsTemp));
+        extract(mysqli_fetch_array($rsTemp));
         return $per_FirstName . " " . $per_LastName;
       } else return "";
       break;
@@ -993,7 +989,7 @@ function displayCustomField($type, $data, $special)
       if ($data > 0) {
         $sSQL = "SELECT lst_OptionName FROM list_lst WHERE lst_ID = $special AND lst_OptionID = $data";
         $rsTemp = RunQuery($sSQL);
-        extract(mysql_fetch_array($rsTemp));
+        extract(mysqli_fetch_array($rsTemp));
         return $lst_OptionName;
       } else return "";
       break;
@@ -1028,7 +1024,7 @@ function formCustomField($type, $fieldname, $data, $special, $bFirstPassFlag)
         "<div class=\"input-group-addon\">" .
         "<i class=\"fa fa-calendar\"></i>" .
         "</div>" .
-        "<input class=\"form-control inputDatePicker\" type=\"text\" id=\"" . $fieldname . "\" Name=\"" . $fieldname . "\" value=\"" . $data . "\"> " .
+        "<input class=\"form-control\" type=\"text\" id=\"" . $fieldname . "\" Name=\"" . $fieldname . "\" value=\"" . $data . "\"> " .
         "</div>";
       break;
 
@@ -1103,7 +1099,7 @@ function formCustomField($type, $fieldname, $data, $special, $bFirstPassFlag)
       echo ">" . gettext("Unassigned") . "</option>";
       echo "<option value=\"0\">-----------------------</option>";
 
-      while ($aRow = mysql_fetch_array($rsGroupPeople)) {
+      while ($aRow = mysqli_fetch_array($rsGroupPeople)) {
         extract($aRow);
 
         echo "<option value=\"" . $per_ID . "\"";
@@ -1145,7 +1141,7 @@ function formCustomField($type, $fieldname, $data, $special, $bFirstPassFlag)
       echo "<option value=\"0\" selected>" . gettext("Unassigned") . "</option>";
       echo "<option value=\"0\">-----------------------</option>";
 
-      while ($aRow = mysql_fetch_array($rsListOptions)) {
+      while ($aRow = mysqli_fetch_array($rsListOptions)) {
         extract($aRow);
         echo "<option value=\"" . $lst_OptionID . "\"";
         if ($data == $lst_OptionID) echo " selected";
@@ -1677,7 +1673,7 @@ function FindMemberClassID()
   $sSQL = "SELECT * FROM list_lst WHERE lst_ID = 1 ORDER BY lst_OptionSequence";
   $rsClassifications = RunQuery($sSQL);
 
-  while ($aRow = mysql_fetch_array($rsClassifications)) {
+  while ($aRow = mysqli_fetch_array($rsClassifications)) {
     extract($aRow);
     if ($lst_OptionName == gettext("Member"))
       return ($lst_OptionID);
@@ -1753,7 +1749,7 @@ function checkEmail($email, $domainCheck = false, $verify = false, $return_error
           $connect_timeout = 2;
           $errno = 0;
           $errstr = 0;
-          $probe_address = $sToEmailAddress;
+          $probe_address = SystemConfig::getValue("sToEmailAddress");
           # Try to open up socket
           if ($sock = @fsockopen($mailers[$n], 25, $errno, $errstr, $connect_timeout)) {
             $response = fgets($sock);
@@ -1766,7 +1762,7 @@ function checkEmail($email, $domainCheck = false, $verify = false, $return_error
               echo "$mailers[$n] replied: $response\n";
             }
             $cmds = array(
-              "HELO $sSMTPHost",  # Be sure to set this correctly!
+              "HELO " . SystemConfig::getValue("sSMTPHost"), # Be sure to set this correctly!
               "MAIL FROM: <$probe_address>",
               "RCPT TO: <$email>",
               "QUIT",
@@ -1856,7 +1852,7 @@ function getFamilyList($sDirRoleHead, $sDirRoleSpouse, $classification = 0, $sSe
   $sSQL = "SELECT per_FirstName, per_fam_ID FROM person_per WHERE per_fam_ID > 0 AND (" . $head_criteria . ") ORDER BY per_fam_ID";
   $rs_head = RunQuery($sSQL);
   $aHead = array();
-  while (list ($head_firstname, $head_famid) = mysql_fetch_row($rs_head)) {
+  while (list ($head_firstname, $head_famid) = mysqli_fetch_row($rs_head)) {
     if ($head_firstname && isset ($aHead[$head_famid])) {
       $aHead[$head_famid] .= " & " . $head_firstname;
     } elseif ($head_firstname) {
@@ -1864,7 +1860,7 @@ function getFamilyList($sDirRoleHead, $sDirRoleSpouse, $classification = 0, $sSe
     }
   }
   $familyArray = array();
-  while ($aRow = mysql_fetch_array($rsFamilies)) {
+  while ($aRow = mysqli_fetch_array($rsFamilies)) {
     extract($aRow);
     $name = $fam_Name;
     if (isset ($aHead[$fam_ID])) {
@@ -1899,7 +1895,7 @@ function genGroupKey($methodSpecificID, $famID, $fundIDs, $date)
     $GroupKey = $methodSpecificID . "|" . $uniqueNum . "|" . $famID . "|" . $fundIDs . "|" . $date;
     $sSQL = "SELECT COUNT(plg_GroupKey) FROM pledge_plg WHERE plg_PledgeOrPayment='Payment' AND plg_GroupKey='" . $GroupKey . "'";
     $rsResults = RunQuery($sSQL);
-    list($numGroupKeys) = mysql_fetch_row($rsResults);
+    list($numGroupKeys) = mysqli_fetch_row($rsResults);
     if ($numGroupKeys) {
       ++$uniqueNum;
     } else {
@@ -1969,8 +1965,8 @@ function random_color()
 function generateGroupRoleEmailDropdown($roleEmails, $href)
 {
   foreach ($roleEmails as $role => $Email) {
-    if ($sToEmailAddress != '' && $sToEmailAddress != 'myReceiveEmailAddress' && !stristr($Email, $sToEmailAddress))
-      $Email .= $sMailtoDelimiter . $sToEmailAddress;
+    if (SystemConfig::getValue("sToEmailAddress") != '' && SystemConfig::getValue("sToEmailAddress") != 'myReceiveEmailAddress' && !stristr($Email, SystemConfig::getValue("sToEmailAddress")))
+      $Email .= $sMailtoDelimiter . SystemConfig::getValue("sToEmailAddress");
     $Email = urlencode($Email);  // Mailto should comply with RFC 2368
     ?>
       <li> <a href="<?= $href. mb_substr($Email,0,-3) ?>"><?=$role?></a></li>
@@ -1978,8 +1974,5 @@ function generateGroupRoleEmailDropdown($roleEmails, $href)
   }
 }
 
-function get_file_extension($file_name) {
-	return substr(strrchr($file_name,'.'),1);
-}
 
 ?>

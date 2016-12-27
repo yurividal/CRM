@@ -61,8 +61,11 @@ else if (isset($_POST["DepositSlipRunTransactions"])) {
 }
 
 $_SESSION['iCurrentDeposit'] = $iDepositSlipID;  // Probably redundant
-$sSQL = "UPDATE user_usr SET usr_currentDeposit = '$iDepositSlipID' WHERE usr_per_id = \"" . $_SESSION['iUserID'] . "\"";
-$rsUpdate = RunQuery($sSQL);
+
+/* @var $currentUser \ChurchCRM\User */
+$currentUser = $_SESSION['user'];
+$currentUser->setCurrentDeposit($iDepositSlipID);
+$currentUser->save();
 
 require "Include/Header.php";
 ?>
@@ -76,7 +79,7 @@ require "Include/Header.php";
         <form method="post" action="#" name="DepositSlipEditor" id="DepositSlipEditor">
           <div class="row">
             <div class="col-lg-4">
-              <label for="Date"><?php echo gettext("Date:"); ?></label>
+              <label for="Date"><?= gettext("Date"); ?>:</label>
               <input type="text" class="form-control date-picker" name="Date" value="<?php echo $thisDeposit->getDate('Y-m-d'); ?>" id="DepositDate" >
             </div>
             <div class="col-lg-4">
@@ -129,7 +132,7 @@ require "Include/Header.php";
           <?php
           foreach ($thisDeposit->getFundTotals() as $fund)
           {
-            echo "<li><b>". $fund->Name . "</b>: $" . $fund->Total."</li>";
+            echo "<li><b>". $fund['Name'] . "</b>: $" . $fund['Total'] ."</li>";
           }
           ?>
         </div>
@@ -204,8 +207,8 @@ require "Include/Header.php";
     $fund = new StdClass();
     $fund->color = "#".random_color() ;
     $fund->highlight= "#".random_color() ;
-    $fund->label = $tmpfund->Name;
-    $fund->value = $tmpfund->Total;
+    $fund->label = $tmpfund['Name'];
+    $fund->value = $tmpfund['Total'];
     array_push($fundData,$fund);
   }
   $pledgeTypeData = array();

@@ -4,6 +4,8 @@
 require 'Include/Config.php';
 require 'Include/Functions.php';
 
+use ChurchCRM\dto\SystemURLs;
+
 //Set the page title
 $sPageTitle = gettext('Integrity Check Results');
 if (!$_SESSION['bAdmin'])
@@ -11,9 +13,17 @@ if (!$_SESSION['bAdmin'])
   Redirect("index.php");
   exit;
 }
-require 'Include/Header.php'; 
-$integrityCheckFile =  __DIR__ ."/integrityCheck.json";
-$IntegrityCheckDetails = json_decode(file_get_contents($integrityCheckFile));
+require 'Include/Header.php';
+$integrityCheckFile = SystemURLs::getDocumentRoot() ."/integrityCheck.json";
+
+if (file_exists($integrityCheckFile))
+{
+  $IntegrityCheckDetails = json_decode(file_get_contents($integrityCheckFile));
+}
+else {
+ $IntegrityCheckDetails->status = "failure";
+ $IntegrityCheckDetails->message = "integrityCheck.json file missing";
+}
 
 if ($IntegrityCheckDetails->status == "failure")
 {
@@ -22,18 +32,18 @@ if ($IntegrityCheckDetails->status == "failure")
     <h4><?= gettext("Integrity Check Failure") ?> </h4>
     <p><?= gettext("The previous integrity check failed") ?></p>
     <p><?= gettext("Details:")?> <?=  $IntegrityCheckDetails->message ?></p>
-    <?php  
+    <?php
       if(count($IntegrityCheckDetails->files) > 0 )
       {
         ?>
-        <p><?= gettext("Files failing integrity check:") ?>
+        <p><?= gettext("Files failing integrity check") ?>:
         <ul>
           <?php
           foreach ($IntegrityCheckDetails->files as $file)
           {
             ?>
-            <li>FileName: <?= $file->filename ?>
-              <?php 
+            <li><?= gettext("File Name")?>: <?= $file->filename ?>
+              <?php
               if($file->status == "File Missing")
               {
                 ?>
@@ -46,8 +56,8 @@ if ($IntegrityCheckDetails->status == "failure")
               {
                 ?>
                 <ul>
-                 <li><?= gettext("Expected Hash:")?> <?= $file->expectedhash ?></li>
-                 <li><?= gettext("Actual Hash:") ?> <?= $file->actualhash ?></li>
+                 <li><?= gettext("Expected Hash")?>: <?= $file->expectedhash ?></li>
+                 <li><?= gettext("Actual Hash") ?>: <?= $file->actualhash ?></li>
                 </ul>
                 <?php
               }
@@ -61,7 +71,7 @@ if ($IntegrityCheckDetails->status == "failure")
       }
     ?>
   </div>
-<?php  
+<?php
 }
 else
 {
@@ -70,7 +80,7 @@ else
     <h4><?= gettext("Integrity Check Passed") ?> </h4>
     <p><?= gettext("The previous integrity check passed") ?></p>
   </div>
-  <?php  
+  <?php
 }
 ?>
 

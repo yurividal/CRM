@@ -47,12 +47,12 @@ else
 $iEventID = 0;
 $iErrors = 0;
 
-if (!$sAction) { $sAction = gettext('Create Event'); }
+if (!$sAction) { $sAction = 'Create Event'; }
 
 //
 // process the action inputs
 //
-if ($sAction==gettext('Create Event') && !empty($tyid)){
+if ($sAction=='Create Event' && !empty($tyid)){
 //
 // user is coming from the event types screen and thus there
 // is no existing event in the event_event table
@@ -64,8 +64,8 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
   $EventExists = 0;
   $sSQL = "SELECT * FROM event_types WHERE type_id=$tyid";
   $rsOpps = RunQuery($sSQL);
-  $numRows = mysql_num_rows($rsOpps);
-  $ceRow = mysql_fetch_array($rsOpps, MYSQL_BOTH);
+  $numRows = mysqli_num_rows($rsOpps);
+  $ceRow = mysqli_fetch_array($rsOpps, MYSQLI_BOTH);
   extract($ceRow);
 
   $iTypeID = $type_id;
@@ -79,7 +79,7 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
 	$sSQL= "SELECT * FROM eventcounts_evtcnt WHERE evtcnt_eventid='$iEventID' ORDER BY evtcnt_countid ASC";
   $sSQL = "SELECT evctnm_countid, evctnm_countname FROM eventcountnames_evctnm WHERE evctnm_eventtypeid='$iTypeID' ORDER BY evctnm_countid ASC";
   $cOpps = RunQuery($sSQL);
-  $iNumCounts = mysql_num_rows($cOpps);
+  $iNumCounts = mysqli_num_rows($cOpps);
 
   $aCountID = array();
   $aCountName = array();
@@ -87,7 +87,7 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
 
   if($iNumCounts) {
     for($c = 0; $c <$iNumCounts; $c++){
-        $cRow = mysql_fetch_array($cOpps, MYSQL_BOTH);
+        $cRow = mysqli_fetch_array($cOpps, MYSQLI_BOTH);
         extract($cRow);
         $aCountID[$c] = $evctnm_countid;
         $aCountName[$c] = $evctnm_countname;
@@ -117,10 +117,10 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
     //
       $sSQL = "SELECT * FROM events_event WHERE event_type = '$iTypeID' ORDER BY event_start DESC LIMIT 1";
       $ecOpps = RunQuery($sSQL);
-      $numRows = mysql_num_rows($ecOpps);
+      $numRows = mysqli_num_rows($ecOpps);
       if($numRows >0){
         // use the most recent event if it exists
-        $ecRow = mysql_fetch_array($ecOpps, MYSQL_BOTH);
+        $ecRow = mysqli_fetch_array($ecOpps, MYSQLI_BOTH);
         extract($ecRow);
         $aStartTokens = explode(" ", $event_start);
         $ceEventStartDate = $aStartTokens[0];
@@ -151,10 +151,10 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
     //
       $sSQL = "SELECT * FROM events_event WHERE event_type = '$iTypeID' ORDER BY event_start DESC LIMIT 1";
       $ecOpps = RunQuery($sSQL);
-      $numRows = mysql_num_rows($ecOpps);
+      $numRows = mysqli_num_rows($ecOpps);
       if($numRows >0){
         // use the most recent event if it exists
-        $ecRow = mysql_fetch_array($ecOpps, MYSQL_BOTH);
+        $ecRow = mysqli_fetch_array($ecOpps, MYSQLI_BOTH);
         extract($ecRow);
         $aStartTokens = explode(" ", $event_start);
         $ceEventStartDate = $aStartTokens[0];
@@ -188,10 +188,10 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
     case "yearly":
       $sSQL = "SELECT * FROM events_event WHERE event_type = '$iTypeID' ORDER BY event_start DESC LIMIT 1";
       $ecOpps = RunQuery($sSQL);
-      $numRows = mysql_num_rows($ecOpps);
+      $numRows = mysqli_num_rows($ecOpps);
       if($numRows >0){
         // use the most recent event if it exists
-        $ecRow = mysql_fetch_array($ecOpps, MYSQL_BOTH);
+        $ecRow = mysqli_fetch_array($ecOpps, MYSQLI_BOTH);
         extract($ecRow);
         $aStartTokens = explode(" ", $event_start);
         $sEventStartDate = $aStartTokens[0];
@@ -233,14 +233,14 @@ if ($sAction==gettext('Create Event') && !empty($tyid)){
   $iEventStatus=0;
   $iTypeID = $type_id;
 }
-else if ($sAction = gettext('Edit') && !empty($sOpp))
+else if ($sAction = 'Edit' && !empty($sOpp))
 {
         // Get data for the form as it now exists..
         $EventExists = 1;
         $sSQL = "SELECT * FROM events_event as t1, event_types as t2 WHERE t1.event_type = t2.type_id AND t1.event_id ='".$sOpp."' LIMIT 1";
         $rsOpps = RunQuery($sSQL);
 
-        $aRow = mysql_fetch_array($rsOpps, MYSQL_BOTH);
+        $aRow = mysqli_fetch_array($rsOpps, MYSQLI_BOTH);
         extract($aRow);
 
         $iEventID = $event_id;
@@ -264,12 +264,12 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
         $sSQL= "SELECT * FROM eventcounts_evtcnt WHERE evtcnt_eventid='$iEventID' ORDER BY evtcnt_countid ASC";
 //        echo $cvSQL;
         $cvOpps = RunQuery($sSQL);
-        $iNumCounts = mysql_num_rows($cvOpps);
+        $iNumCounts = mysqli_num_rows($cvOpps);
         $nCnts = $iNumCounts;
 //        echo "numcounts = {$aNumCounts}\n\l";
         if($iNumCounts) {
           for($c = 0; $c <$iNumCounts; $c++){
-            $aRow = mysql_fetch_array($cvOpps, MYSQL_BOTH);
+            $aRow = mysqli_fetch_array($cvOpps, MYSQLI_BOTH);
             extract($aRow);
             $aCountID[$c] = $evtcnt_countid;
             $aCountName[$c] = $evtcnt_countname;
@@ -291,7 +291,7 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
         } else {
 					$sSQL = "SELECT type_name FROM event_types WHERE type_id = '" . FilterInput($iTypeID) . "' LIMIT 1";
 	        $rsOpps = RunQuery($sSQL);
-	        $aRow = mysql_fetch_array($rsOpps, MYSQL_BOTH);
+	        $aRow = mysqli_fetch_array($rsOpps, MYSQLI_BOTH);
 	        extract($aRow);
 					$sTypeName = $type_name;
 				}
@@ -339,7 +339,7 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
                      `inactive` = '".FilterInput($iEventStatus)."',
                      `event_typename` = '".FilterInput($sTypeName)."'";
             RunQuery($sSQL);
-            $iEventID = mysql_insert_id();
+            $iEventID = mysqli_insert_id($cnInfoCentral);
             for($c=0; $c<$iNumCounts; $c++)
             {
               $cCnt = ltrim(rtrim($aCountName[$c]));
@@ -415,14 +415,14 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
 <?php if (empty($iTypeID)) { ?>
 
   <tr>
-    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Type:") ?></td>
+    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Type") ?>:</td>
     <td colspan="3" class="TextColumn">
 			<select name='EN_tyid' class='form-control' id='event_type_id'>
 				<option><?= gettext("Select your event type"); ?></option>
 				<?php
 					$sSQL = "SELECT * FROM event_types";
 					$rsEventTypes = RunQuery($sSQL);
-					while($aRow = mysql_fetch_array($rsEventTypes)) {
+					while($aRow = mysqli_fetch_array($rsEventTypes)) {
 						extract($aRow);
 						echo "<option value='" . $type_id . "' >" . $type_name . "</option>";
 					}
@@ -441,7 +441,7 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
 <?php } else { // if (empty($iTypeID)) ?>
 
   <tr>
-    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Type:") ?></td>
+    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Type") ?>:</td>
     <td colspan="3" class="TextColumn">
     <input type="hidden" name="EventTypeName" value="<?= ($sTypeName) ?>">
     <input type="hidden" name="EventTypeID" value="<?= ($iTypeID) ?>">
@@ -450,20 +450,20 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
   </tr>
 
   <tr>
-    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Title:") ?></td>
+    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Title") ?>:</td>
     <td colspan="1" class="TextColumn">
       <input type="text" name="EventTitle" value="<?= ($sEventTitle) ?>" size="30" maxlength="100" class='form-control' required>
     </td>
   </tr>
   <tr>
-    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Desc:") ?></td>
+    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Desc") ?>:</td>
     <td colspan="3" class="TextColumn">
       <textarea name="EventDesc" rows="4" maxlength="100" class='form-control' required><?= ($sEventDesc) ?></textarea>
     </td>
   </tr>
   <tr>
     <td class="LabelColumn"><span style="color: red">*</span>
-      <?= gettext("Date Range:") ?>
+      <?= gettext("Date Range") ?>:
     </td>
     <td class="TextColumn">
       <input type="text" name="EventDateRange" value=""
@@ -485,7 +485,7 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
       <?php
       for ($c=0; $c<$nCnts; $c++){
         ?><tr>
-          <td><strong><?= ($aCountName[$c].": ") ?>&nbsp;</strong></td>
+          <td><strong><?= (gettext($aCountName[$c]).":") ?>&nbsp;</strong></td>
         <td>
         <input type="text" name="EventCount[]" value="<?= ($aCount[$c]) ?>" size="8" class='form-control'>
         <input type="hidden" name="EventCountID[]" value="<?= ($aCountID[$c]) ?>">
@@ -508,12 +508,12 @@ else if ($sAction = gettext('Edit') && !empty($sOpp))
   </tr>
 
   <tr>
-    <td class="LabelColumn"><?= gettext("Event Sermon:") ?></td>
+    <td class="LabelColumn"><?= gettext("Event Sermon") ?>:</td>
     <td colspan="3" class="TextColumn"><textarea name="EventText" rows="5" cols="80" class='form-control'><?= ($sEventText) ?></textarea></td>
   </tr>
 
   <tr>
-    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Status:") ?></td>
+    <td class="LabelColumn"><span style="color: red">*</span><?= gettext("Event Status") ?>:</td>
     <td colspan="3" class="TextColumn">
       <input type="radio" name="EventStatus" value="0" <?php if ($iEventStatus == 0) { echo 'checked'; } ?>/> <?= _("Active")?>
       <input type="radio" name="EventStatus" value="1" <?php if ($iEventStatus == 1) { echo 'checked'; } ?>/> <?= _("Inactive")?>
