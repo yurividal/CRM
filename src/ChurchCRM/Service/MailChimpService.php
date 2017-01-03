@@ -1,33 +1,33 @@
 <?php
 
 namespace ChurchCRM\Service;
+
 use ChurchCRM\dto\SystemConfig;
+use DrewM\MailChimp\MailChimp;
 
 class MailChimpService
 {
 
-  private $isActive = false;
-  private $myMailchimp;
+  private $mailchimp;
 
   public function __construct()
   {
 
-   if (SystemConfig::getValue("mailChimpApiKey") != "") {
-      $this->isActive = true;
-      $this->myMailchimp = new \Mailchimp(SystemConfig::getValue("mailChimpApiKey"));
+   if ($this->isActive()) {
+      $this->;
     }
   }
 
   function isActive()
   {
-    return $this->isActive;
+    return !empty(SystemConfig::getValue("mailChimpApiKey"));
   }
 
   function isEmailInMailChimp($email)
   {
 
-    if (!$this->isActive) {
-      return "Mailchimp is not active";
+    if (!$this->isActive()) {
+      return "MailChimp ". gettext("is not active");
     }
 
     if ($email == "") {
@@ -35,10 +35,11 @@ class MailChimpService
     }
 
     try {
-      $lists = $this->myMailchimp->helper->listsForEmail(array("email" => $email));
+      $mcResponse = $this->mailchimp->get("/search-members?query=".$email);
+      return print_r($mcResponse);
       $listNames = array();
-      foreach ($lists as $val) {
-        array_push($listNames, $val["name"]);
+      foreach ($mcResponse->members as $member) {
+        array_push($listNames, $member->list_id);
       }
       return implode(",", $listNames);
     } catch (\Mailchimp_Invalid_ApiKey $e) {
@@ -59,7 +60,7 @@ class MailChimpService
       return "Mailchimp is not active";
     }
     try {
-      $result = $this->myMailchimp->lists->getList();
+      $result = $this->mailchimp->lists->getList();
       return $result["data"];
     } catch (\Mailchimp_Invalid_ApiKey $e) {
       return "Invalid ApiKey";
