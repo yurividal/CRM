@@ -8,6 +8,7 @@ Welcome to Church Web CRM
 [![Stories in Ready](https://badge.waffle.io/ChurchCRM/CRM.png?label=in Review&title=In Review)](https://waffle.io/ChurchCRM/CRM)
 [![Join the chat at https://gitter.im/ChurchCRM/CRM](https://badges.gitter.im/ChurchCRM/CRM.svg)](https://gitter.im/ChurchCRM/CRM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ChurchCRM/CRM.svg?branch=master)](https://travis-ci.org/ChurchCRM/CRM)
+[![StyleCI](https://styleci.io/repos/30856851/shield?branch=master)](https://styleci.io/repos/30856851)
 
 ### Docker
 <img src="https://img.shields.io/docker/pulls/churchcrm/crm.svg?maxAge=2592000">
@@ -39,7 +40,7 @@ see [Checkout our Change Log] (CHANGELOG.md)
 To test out the demo, you may login to the http://demo.churchcrm.io  with the following:
 
 - **Username:** admin
-- **Password:** george
+- **Password:** changeme
 
 ## New UI
 
