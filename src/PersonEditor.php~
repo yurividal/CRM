@@ -1148,6 +1148,50 @@ require 'Include/Header.php';
             </div>
         </div>
     </div>
+
+		<?php if ($numCustomFields > 0) {
+                            ?>
+    <div class="box box-info clearfix">
+        <div class="box-header">
+            <h3 class="box-title"><?= gettext('Informações Complementares') ?></h3>
+            <!-- <div class="pull-right"><br/>
+                <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
+            </div> -->
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <?php if ($numCustomFields > 0) {
+                                mysqli_data_seek($rsCustomFields, 0);
+
+                                while ($rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH)) {
+                                    extract($rowCustomField);
+
+                                    if ($aSecurityType[$custom_FieldSec] == 'bAll' || $_SESSION[$aSecurityType[$custom_FieldSec]]) {
+                                        echo "<div class=\"form-group col-md-3\"><label>".$custom_Name.'</label>';
+
+                                        if (array_key_exists($custom_Field, $aCustomData)) {
+                                            $currentFieldData = trim($aCustomData[$custom_Field]);
+                                        } else {
+                                            $currentFieldData = '';
+                                        }
+
+                                        if ($type_ID == 11) {
+                                            $custom_Special = $sPhoneCountry;
+                                        }
+
+                                        formCustomField($type_ID, $custom_Field, $currentFieldData, $custom_Special, !isset($_POST['PersonSubmit']));
+                                        if (isset($aCustomErrors[$custom_Field])) {
+                                            echo '<span style="color: red; ">'.$aCustomErrors[$custom_Field].'</span>';
+                                        }
+                                        echo '</div>';
+                                    }
+                                }
+                            } ?>
+        </div>
+    </div>
+  <?php
+
+                        } ?>    
+    
     <div class="box box-info clearfix">
         <div class="box-header">
             <h3 class="box-title"><?= gettext('Informações de Membresia') ?></h3>
@@ -1160,7 +1204,7 @@ require 'Include/Header.php';
               <div class="form-group col-md-3 col-lg-3">
                 <label><?= gettext('Classificação') ?>:</label>
                 <select name="Classification" class="form-control">
-                  <option value="0"><?= gettext('Unassigned') ?></option>
+                  <option value="0"><?= gettext(' ') ?></option>
                   <option value="0" disabled>-----------------------</option>
                   <?php while ($aRow = mysqli_fetch_array($rsClassifications)) {
                             extract($aRow);
@@ -1247,51 +1291,8 @@ require 'Include/Header.php';
         </div>
     </div>
     
-   
-    
-  <?php if ($numCustomFields > 0) {
-                            ?>
-    <div class="box box-info clearfix">
-        <div class="box-header">
-            <h3 class="box-title"><?= gettext('Custom Fields') ?></h3>
-            <!-- <div class="pull-right"><br/>
-                <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
-            </div> -->
-        </div><!-- /.box-header -->
-        <div class="box-body">
-            <?php if ($numCustomFields > 0) {
-                                mysqli_data_seek($rsCustomFields, 0);
-
-                                while ($rowCustomField = mysqli_fetch_array($rsCustomFields, MYSQLI_BOTH)) {
-                                    extract($rowCustomField);
-
-                                    if ($aSecurityType[$custom_FieldSec] == 'bAll' || $_SESSION[$aSecurityType[$custom_FieldSec]]) {
-                                        echo "<div class='row'><div class=\"form-group col-md-3\"><label>".$custom_Name.'</label>';
-
-                                        if (array_key_exists($custom_Field, $aCustomData)) {
-                                            $currentFieldData = trim($aCustomData[$custom_Field]);
-                                        } else {
-                                            $currentFieldData = '';
-                                        }
-
-                                        if ($type_ID == 11) {
-                                            $custom_Special = $sPhoneCountry;
-                                        }
-
-                                        formCustomField($type_ID, $custom_Field, $currentFieldData, $custom_Special, !isset($_POST['PersonSubmit']));
-                                        if (isset($aCustomErrors[$custom_Field])) {
-                                            echo '<span style="color: red; ">'.$aCustomErrors[$custom_Field].'</span>';
-                                        }
-                                        echo '</div></div>';
-                                    }
-                                }
-                            } ?>
-        </div>
-    </div>
-  <?php
-
-                        } ?>
-    <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
+     
+      <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
     <?php if ($_SESSION['bAddRecords']) {
                             echo '<input type="submit" class="btn btn-primary" value="'.gettext('Save and Add').'" name="PersonSubmitAndAdd">';
                         } ?>
@@ -1333,8 +1334,9 @@ function GroupAdd() {
 	
 </script>
 
-//this scripts show the date only if person is diacono or presbitero
+
 <script>
+//this scripts show the date only if person is diacono or presbitero
 if (<?php echo ($iDiacono) ?>) {
    $("#DiaconoEleito").show();
 }
