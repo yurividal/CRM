@@ -1,1 +1,0 @@
-# Please review the [CONTRIBUTING.md file on our Documentation Site](http://docs.churchcrm.io/en/latest/Development/Contributing).

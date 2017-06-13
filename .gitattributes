@@ -1,8 +1,0 @@
-* text=auto
-* eol=lf
-*.jpg binary
-*.git binary
-*.png binary
-*.xcf binary
-*.pdf binary
-*.mo binary

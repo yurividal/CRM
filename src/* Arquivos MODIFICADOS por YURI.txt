@@ -1,3 +1,0 @@
-/Include/StateDropDown.php
-/PersonEditor.php
-/favicon.ico
