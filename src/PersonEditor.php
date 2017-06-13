@@ -106,8 +106,8 @@ $izero = 0;
 
 $fam_Country = '';
 
-$bNoFormat_HomePhone = false;
-$bNoFormat_WorkPhone = false;
+$bNoFormat_HomePhone = true;
+$bNoFormat_WorkPhone = true;
 $bNoFormat_CellPhone = false;
 
 //Is this the second pass?
@@ -127,6 +127,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     $sAddress1 = '';
     $sAddress2 = '';
     $sBairro = '';
+    $sState = '';
     $sCity = '';
     $sZip = '';
     $sCountry = '';
@@ -144,6 +145,9 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     }
     if (array_key_exists('Zip', $_POST)) {
         $sZip = FilterInput($_POST['Zip']);
+    }
+    if (array_key_exists('State', $_POST)) {
+        $sState = FilterInput($_POST['State']);
     }
 
     // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
@@ -166,17 +170,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     }
 
     $sCountryTest = SelectWhichInfo($sCountry, $fam_Country, false);
-    $sState = '';
-    if ($sCountryTest == 'United States' || $sCountryTest == 'Canada') {
-        if (array_key_exists('State', $_POST)) {
-            $sState = FilterInput($_POST['State']);
-        }
-    } else {
-        if (array_key_exists('StateTextbox', $_POST)) {
-            $sState = FilterInput($_POST['StateTextbox']);
-        }
-    }
-
+    
+	 
     $sHomePhone = FilterInput($_POST['HomePhone']);
     $sWorkPhone = FilterInput($_POST['WorkPhone']);
     $sCellPhone = FilterInput($_POST['CellPhone']);
@@ -223,7 +218,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     // If they entered a full date, see if it's valid
     if (strlen($iBirthYear) > 0) {
         if ($iBirthYear == 0) { // If zero set to NULL
-            $iBirthYear = null;
+            $iBirthYear ='0';
         } elseif ($iBirthYear > 2155 || $iBirthYear < 1901) {
             $sBirthYearError = gettext('Invalid Year: allowable values are 1901 to 2155');
             $bErrorFlag = true;
@@ -235,6 +230,11 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
     }
     
+    
+    // If they DONT ENTER A DATE, CHANGE IT TO ZERO
+    if (strlen($iBirthYear) == 0) {
+        $iBirthYear = '0';
+    }
     
 		//Check if gender is NULL
 	   if ($iGender == '') {
@@ -258,7 +258,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
 	   if ($iPresbitero == '1' && $iGender == '2') {
             $sTopError = gettext('Uma Mulher não pode ser Presbítero');
             $bErrorFlag = true;
-        }      
+        }
+        
 
     // Validate Friend Date if one was entered
     if (strlen($dDiaconoDate) > 0) {
@@ -582,7 +583,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $sAddress2 = '';
         $sBairro = $per_Bairro;
         $sCity = SystemConfig::getValue('sDefaultCity');
-        $sState = SystemConfig::getValue('sDefaultState');
+        $sState = 'RJ';
         $sZip = '';
         $sCountry = SystemConfig::getValue('sDefaultCountry');
         $sHomePhone = '';
@@ -592,7 +593,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $sWorkEmail = '';
         $iBirthMonth = 0;
         $iBirthDay = 0;
-        $iBirthYear = 0;
+        $iBirthYear = '';
         $bHideAge = 0;
         $iOriginalFamily = 0;
         $iFamily = '0';
@@ -957,7 +958,7 @@ require 'Include/Header.php';
                         </div>
                         
 							<div class="form-group col-md-2">
-                        <label for="StatleTextBox">
+                        <label for="State">
                             <?php if ($bFamilyState) {
         echo '<span style="color: red;">';
     }
@@ -1021,8 +1022,6 @@ require 'Include/Header.php';
                 <input type="hidden" name="City"
                        value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, 'UTF-8') ?>"></input>
                 <input type="hidden" name="State"
-                       value="<?= htmlentities(stripslashes($sState), ENT_NOQUOTES, 'UTF-8') ?>"></input>
-                <input type="hidden" name="StateTextbox"
                        value="<?= htmlentities(stripslashes($sState), ENT_NOQUOTES, 'UTF-8') ?>"></input>
                 <input type="hidden" name="Zip"
                        value="<?= htmlentities(stripslashes($sZip), ENT_NOQUOTES, 'UTF-8') ?>"></input>

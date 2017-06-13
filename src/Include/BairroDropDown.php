@@ -1,5 +1,5 @@
 <select name="Bairro" class="form-control select2" id="state-input">
-	<option value="">No Selection</option>
+	<option value=""> </option>
 	<option value="" disabled>--------------------</option>
 	<option value="Bancários"<?php if ($sBairro == 'Bancários') {
     echo ' selected';

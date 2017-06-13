@@ -268,15 +268,15 @@ function DoQuery()
 
 </div>
 
-
+    
 <div class="box box-info">
     <div class="box-header with-border">
-        <div class="box-title">Query</div>
+        <div class="box-title">Query</div> <div data-role="collapsible">
     </div>
     <div class="box-body">
         <code><?= str_replace(chr(13), '<br>', htmlspecialchars($qry_SQL)); ?></code>
     </div>
-</div>
+</div></div>
 <?php
 
 }
@@ -394,6 +394,9 @@ if (mysqli_num_rows($rsParameters)) {
     
 </div>
 
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <?php
 
 }
