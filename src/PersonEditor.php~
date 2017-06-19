@@ -217,10 +217,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
 
     // If they entered a full date, see if it's valid
     if (strlen($iBirthYear) > 0) {
-        if ($iBirthYear == 0) { // If zero set to NULL
-            $iBirthYear ='0';
-        } elseif ($iBirthYear > 2155 || $iBirthYear < 1901) {
-            $sBirthYearError = gettext('Invalid Year: allowable values are 1901 to 2155');
+       if ($iBirthYear > 2155 || $iBirthYear < 1901) {
+            $sBirthYearError = gettext('Ano de Nascimento Inválido. Permitido valores entre 1901 e 2155');
             $bErrorFlag = true;
         } elseif ($iBirthMonth > 0 && $iBirthDay > 0) {
             if (!checkdate($iBirthMonth, $iBirthDay, $iBirthYear)) {
@@ -230,10 +228,21 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
     }
     
+    // check if Membro_Nao_Comungante is minor
+    
+			$date = new DateTime($iBirthYear.'-'.$iBirthMonth.'-'.$iBirthDay);
+			$threshold = new DateTime ('-18 years');
+			if ($date <= $threshold && $iClassification == 2) {
+				$sTopError = gettext('Pessoa com mais de 18 anos não pode ser Membro Não-Comungante');
+            $bErrorFlag = true;	
+			}
+
+    
     
     // If they DONT ENTER A DATE, CHANGE IT TO ZERO
     if (strlen($iBirthYear) == 0) {
-        $iBirthYear = '0';
+         $sBirthYearError = gettext('Ano de Nascimento Inválido. Permitido valores entre 1901 e 2155');
+            $bErrorFlag = true;
     }
     
 		//Check if gender is NULL
@@ -348,13 +357,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $sCellPhone = CollapsePhoneNumber($sCellPhone, $sPhoneCountry);
         }
 
-        //If no birth year, set to NULL
-        if ((strlen($iBirthYear) != 4)) {
-            $iBirthYear = null;
-        } else {
-            $iBirthYear = "'$iBirthYear'";
-        }
-        
+             
       
 
         // New Family (add)
@@ -402,9 +405,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $sSQL .= ')';
             $bGetKeyBack = true;
             
-            //echo $sSQL;
-
-
+				//echo $sSQL;
+            
             // Existing person (update)
         } else {
             $sSQL = "UPDATE person_per SET per_Title = '".$sTitle."',per_FirstName = '".$sFirstName."',per_MiddleName = '".$sMiddleName."', per_LastName = '".$sLastName."', per_Suffix = '".$sSuffix."', per_Gender = ".$iGender.", per_Diacono = ".$iDiacono.", per_Presbitero = '".$iPresbitero."', per_Address1 = '".$sAddress1."', per_Address2 = '".$sAddress2."', per_Bairro = '".$sBairro."', per_City = '".$sCity."', per_State = '".$sState."', per_Zip = '".$sZip."', per_Country = '".$sCountry."', per_HomePhone = '".$sHomePhone."', per_WorkPhone = '".$sWorkPhone."', per_CellPhone = '".$sCellPhone."', per_Email = '".$sEmail."', per_WorkEmail = '".$sWorkEmail."', per_BirthMonth = ".$iBirthMonth.', per_BirthDay = '.$iBirthDay.', '.'per_BirthYear = '.$iBirthYear.', per_fam_ID = '.$iFamily.', per_Fmr_ID = '.$iFamilyRole.', per_cls_ID = '.$iClassification.', per_MembershipDate = ';
@@ -441,7 +443,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
 
         //Execute the SQL
-        RunQuery($sSQL);
+       RunQuery($sSQL);
 
         $note = new Note();
         $note->setEntered($_SESSION['iUserID']);
@@ -593,7 +595,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $sWorkEmail = '';
         $iBirthMonth = 0;
         $iBirthDay = 0;
-        $iBirthYear = '';
+        $iBirthYear = 0;
         $bHideAge = 0;
         $iOriginalFamily = 0;
         $iFamily = '0';
@@ -813,7 +815,7 @@ require 'Include/Header.php';
                     </div>
                     <div class="col-md-2">
                         <label><?= gettext('Ano de Nascimento') ?>:</label>
-                        <input type="text" name="BirthYear" value="<?php echo $iBirthYear ?>" maxlength="4" size="5"
+                        <input type="number" name="BirthYear" value="<?php echo $iBirthYear ?>" maxlength="4" size="5"
                                placeholder="yyyy" class="form-control">
                         <?php if ($sBirthYearError) {
     ?><font color="red"><br><?php echo $sBirthYearError ?>
@@ -1047,7 +1049,7 @@ require 'Include/Header.php';
                         </div>
                         <input type="text" name="HomePhone"
                                value="<?= htmlentities(stripslashes($sHomePhone), ENT_NOQUOTES, 'UTF-8') ?>" size="30"
-                               maxlength="30" class="form-control" data-inputmask='"mask": "<?= SystemConfig::getValue('sPhoneFormat')?>"' data-mask>
+                               maxlength="30" class="form-control" data-inputmask='"mask": "<?= SystemConfig::getValue('sHomePhoneFormat')?>"' data-mask>
                         <br><input type="checkbox" name="NoFormat_HomePhone"
                                    value="1" <?php if ($bNoFormat_HomePhone) {
                             echo ' checked';

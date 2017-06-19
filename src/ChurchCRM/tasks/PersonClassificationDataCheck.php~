@@ -6,14 +6,13 @@ use ChurchCRM\dto\SystemConfig;
 use ChurchCRM\dto\SystemURLs;
 use ChurchCRM\PersonQuery;
 
-class PersonRoleDataCheck implements iTask
+class PersonClassificationDataCheck implements iTask
 {
-
     private $count;
 
     public function __construct()
     {
-        $personQuery = PersonQuery::create()->filterByFmrId(0)->find();
+        $personQuery = PersonQuery::create()->filterByClsId(0)->find();
         $this->count = $personQuery->count();
     }
 
@@ -29,17 +28,17 @@ class PersonRoleDataCheck implements iTask
 
     public function getLink()
     {
-        return SystemURLs::getRootPath() . '/SelectList.php?mode=person&FamilyRole=0&PersonColumn3=Family+Role';
+        return SystemURLs::getRootPath() . '/SelectList.php?mode=person&Classification=0&PersonColumn3=Classification';
     }
 
     public function getTitle()
     {
-        return gettext('Falta informação sobre função familiar') . " (" . $this->count . ")";
+        return gettext('Missing Classification Data') . " (" . $this->count . ")";
     }
 
     public function getDesc()
     {
-        return gettext("Falta informação sobre função familiar de algumas pessoas");
+        return gettext("Missing Classification Data for Some People");
     }
 
 }

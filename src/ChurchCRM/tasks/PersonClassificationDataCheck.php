@@ -33,12 +33,12 @@ class PersonClassificationDataCheck implements iTask
 
     public function getTitle()
     {
-        return gettext('Missing Classification Data') . " (" . $this->count . ")";
+        return gettext('Falta informação sobre status de Membresia') . " (" . $this->count . ")";
     }
 
     public function getDesc()
     {
-        return gettext("Missing Classification Data for Some People");
+        return gettext("Falta informação sobre status de Membresia de algumas pessoas");
     }
 
 }

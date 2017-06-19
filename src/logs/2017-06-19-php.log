@@ -1,0 +1,195 @@
+[19-Jun-2017 10:24:00 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (0) at position 0 (0): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php:245
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(245): DateTime->__construct('0')
+#1 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 245
+[19-Jun-2017 10:25:01 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (--) at position 0 (-): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php:245
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(245): DateTime->__construct('--')
+#1 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 245
+[19-Jun-2017 10:25:17 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (--) at position 0 (-): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php:245
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(245): DateTime->__construct('--')
+#1 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 245
+[19-Jun-2017 10:26:12 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (--) at position 0 (-): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php:245
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(245): DateTime->__construct('--')
+#1 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 245
+[19-Jun-2017 10:26:48 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (--) at position 0 (-): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php:245
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(245): DateTime->__construct('--')
+#1 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 245
+[19-Jun-2017 10:37:52 America/Sao_Paulo] PHP Fatal error:  Call to undefined function get_age() in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 407
+[19-Jun-2017 10:39:16 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(457): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(457): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:42:48 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string ($iBirthYear-$iBirthMonth-$iBirthDay) at position 0 ($): Unexpected character' in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php:95
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(95): DateTime->__construct('$iBirthYear-$iB...')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(407): get_age('$iBirthYear-$iB...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php on line 95
+[19-Jun-2017 10:47:41 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(460): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:50:43 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:51:35 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:53:36 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(462): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:54:40 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(462): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:56:12 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(462): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:57:19 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:57:44 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:58:25 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 10:58:40 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:01:43 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:03:32 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(463): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:06:03 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(444): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:07:42 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(457): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:11:15 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(464): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:14:01 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct() expects parameter 1 to be string, object given' in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php:95
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(95): DateTime->__construct(Object(DateTime))
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(406): get_age(Object(DateTime))
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php on line 95
+[19-Jun-2017 11:16:10 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct() expects parameter 1 to be string, object given' in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php:95
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(95): DateTime->__construct(Object(DateTime))
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(407): get_age(Object(DateTime))
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php on line 95
+[19-Jun-2017 11:18:53 America/Sao_Paulo] PHP Fatal error:  Call to undefined function vardump() in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 407
+[19-Jun-2017 11:22:21 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:22:56 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:23:22 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:34:25 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(468): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:40:16 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(451): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:42:59 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(451): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:43:45 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
+[19-Jun-2017 11:44:59 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php(461): RunQuery('INSERT INTO per...')
+#2 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253
