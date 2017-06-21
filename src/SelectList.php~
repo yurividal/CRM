@@ -590,6 +590,26 @@ if (isset($iGender) && $iGender == 2) {
 }
 echo '> '.gettext('Female').'</option></select>';
 
+echo '	<tr><td align="center">
+		<select name="Gender" onchange="this.form.submit()">
+		<option value="" ';
+if (!isset($iGender)) {
+    echo ' selected ';
+}
+echo '> '.gettext('Male & Female').'</option>';
+
+echo '<option value="1"';
+if (isset($iGender) && $iGender == 1) {
+    echo ' selected ';
+}
+echo '> '.gettext('Male').'</option>';
+
+echo '<option value="2"';
+if (isset($iGender) && $iGender == 2) {
+    echo ' selected ';
+}
+echo '> '.gettext('Female').'</option></select>';
+
 
 // **********
 // Classification drop down list

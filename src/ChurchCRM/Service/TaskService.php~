@@ -29,7 +29,7 @@ class TaskService
     {
 
         $this->taskClasses = [
-   //         new PrerequisiteCheckTask(),
+            new PrerequisiteCheckTask(),
             new ChurchNameTask(),
             new ChurchAddress(),
             new EmailTask(),

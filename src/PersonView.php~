@@ -148,7 +148,7 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
 //Get a formatted mailing address to use as display to the user.
 SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Address1, $fam_Address2, true);
     $sCity = SelectWhichInfo($per_City, $fam_City, true);
-    $sState =$per_State;
+    $sState = $per_State;
     $sBairro = SelectWhichInfo($per_Bairro, $fam_Bairro, true);
     $sZip = SelectWhichInfo($per_Zip, $fam_Zip, true);
     $sCountry = SelectWhichInfo($per_Country, $fam_Country, true);
@@ -1065,4 +1065,6 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
   <?php
 
 }
+
+
 require 'Include/Footer.php' ?>
