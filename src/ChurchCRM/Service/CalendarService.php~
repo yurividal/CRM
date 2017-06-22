@@ -14,7 +14,7 @@ class CalendarService
         $eventTypes = [];
         array_push($eventTypes, ['Name' => gettext('Event'), 'backgroundColor' =>'#DA2C07']);
         array_push($eventTypes, ['Name' => gettext('Birthday'), 'backgroundColor' =>'#4A7DF2']);
-        array_push($eventTypes, ['Name' => gettext('Anniversary'), 'backgroundColor' =>'#51A23C']);
+        array_push($eventTypes, ['Name' => gettext('Anniversary'), 'backgroundColor' =>'#90F675']);
 
         return $eventTypes;
     }
@@ -110,7 +110,7 @@ class CalendarService
         $event['backgroundColor'] = '#DA2C07';
         break;
       case 'anniversary':
-        $event['backgroundColor'] = '#51A23C';
+        $event['backgroundColor'] = '#90F675';
         break;
       default:
         $event['backgroundColor'] = '#eeeeee';
