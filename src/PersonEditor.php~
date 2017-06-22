@@ -255,10 +255,10 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
         
    	//Check if bairro is NULL
-	   //if ($sBairro == '') {
-      //      $sTopError = gettext('Não selecionou o Bairro');
-      //      $bErrorFlag = true;
-      //  }
+	   if ($sBairro == '') {
+            $sTopError = gettext('Não selecionou o Bairro');
+            $bErrorFlag = true;
+        }
         
    //Check if diacono is female
 	   if ($iDiacono == '1' && $iGender == '2') {
