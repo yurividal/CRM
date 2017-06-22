@@ -109,6 +109,7 @@ $fam_Country = '';
 $bNoFormat_HomePhone = true;
 $bNoFormat_WorkPhone = true;
 $bNoFormat_CellPhone = false;
+$bNoBirthYear = false;
 
 //Is this the second pass?
 if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
@@ -196,6 +197,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     $bNoFormat_HomePhone = isset($_POST['NoFormat_HomePhone']);
     $bNoFormat_WorkPhone = isset($_POST['NoFormat_WorkPhone']);
     $bNoFormat_CellPhone = isset($_POST['NoFormat_CellPhone']);
+    $bNoBirthYear = isset($_POST['NoBirthYear']);
 
     //Adjust variables as needed
     if ($iFamily == 0) {
@@ -222,7 +224,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $bErrorFlag = true;
         } elseif ($iBirthMonth > 0 && $iBirthDay > 0) {
             if (!checkdate($iBirthMonth, $iBirthDay, $iBirthYear)) {
-                $sBirthDateError = gettext('Invalid Birth Date.');
+                $sBirthDateError = gettext('Data de Nascimento Inválida.');
                 $bErrorFlag = true;
             }
         }
@@ -240,9 +242,10 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     
     
     // If they DONT ENTER A DATE, CHANGE IT TO ZERO
-    if (strlen($iBirthYear) == 0) {
-         $sBirthYearError = gettext('Ano de Nascimento Inválido. Permitido valores entre 1901 e 2155');
-            $bErrorFlag = true;
+    if (strlen($iBirthYear) == 0 && !($bNoBirthYear)) {
+			$sTopError = gettext('Insira um ano de Nascimento ou Selecione "Nao Informado"');
+         $sBirthYearError = gettext('Insira um ano de Nascimento ou Selecione "Nao Informado"');
+         $bErrorFlag = true;
     }
     
 		//Check if gender is NULL
@@ -356,6 +359,10 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         if (!$bNoFormat_CellPhone) {
             $sCellPhone = CollapsePhoneNumber($sCellPhone, $sPhoneCountry);
         }
+		  if ($bNoBirthYear) {
+				echo 'SELECIONEI NO BDAY' ;           
+            $iBirthYear = '';
+        }
 
              
       
@@ -382,8 +389,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         // New Person (add)
       if ($iPersonID < 1) {
             $iEnvelope = 0;
-            $sSQL = "INSERT INTO person_per (per_Diacono, per_Presbitero, per_Title, per_FirstName, per_MiddleName, per_LastName, per_Suffix, per_Gender, per_Address1, per_Address2, per_Bairro, per_City, per_State, per_Zip, per_Country, per_HomePhone, per_WorkPhone, per_CellPhone, per_Email, per_WorkEmail, per_BirthMonth, per_BirthDay, per_BirthYear, per_Envelope, per_fam_ID, per_fmr_ID, per_MembershipDate, per_cls_ID, per_DateEntered, per_EnteredBy, per_DiaconoDate, per_PresbiteroDate, per_Flags )
-			         VALUES ('".$iDiacono."','".$iPresbitero."','".$sTitle."','".$sFirstName."','".$sMiddleName."','".$sLastName."','".$sSuffix."',".$iGender.",'".$sAddress1."','".$sAddress2."','".$sBairro."','".$sCity."','".$sState."','".$sZip."','".$sCountry."','".$sHomePhone."','".$sWorkPhone."','".$sCellPhone."','".$sEmail."','".$sWorkEmail."',".$iBirthMonth.','.$iBirthDay.','.$iBirthYear.','.$iEnvelope.','.$iFamily.','.$iFamilyRole.',';
+            $sSQL = "INSERT INTO person_per (per_Diacono, per_Presbitero, per_Title, per_FirstName, per_MiddleName, per_LastName, per_Suffix, per_Gender, per_Address1, per_Address2, per_Bairro, per_City, per_State, per_Zip, per_Country, per_HomePhone, per_WorkPhone, per_CellPhone, per_Email, per_WorkEmail, per_BirthDay, per_BirthMonth, per_Envelope, per_fam_ID, per_fmr_ID, per_MembershipDate, per_cls_ID, per_DateEntered, per_EnteredBy, per_DiaconoDate, per_BirthYear, per_PresbiteroDate, per_Flags )
+			         VALUES ('".$iDiacono."','".$iPresbitero."','".$sTitle."','".$sFirstName."','".$sMiddleName."','".$sLastName."','".$sSuffix."',".$iGender.",'".$sAddress1."','".$sAddress2."','".$sBairro."','".$sCity."','".$sState."','".$sZip."','".$sCountry."','".$sHomePhone."','".$sWorkPhone."','".$sCellPhone."','".$sEmail."','".$sWorkEmail."',".$iBirthDay.','.$iBirthMonth.','.$iEnvelope.','.$iFamily.','.$iFamilyRole.',';
             if (strlen($dMembershipDate) > 0) {
                 $sSQL .= '"'.$dMembershipDate.'"';
             } else {
@@ -395,7 +402,13 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             } else {
                 $sSQL .= 'NULL';
             }
-            $sSQL .= ', ';
+            $sSQL .= ',';
+            if (strlen($iBirthYear) > 0) {
+                $sSQL .= '"'.$iBirthYear.'"';
+            } else {
+                $sSQL .= 'NULL';
+            }
+            $sSQL .= ',';
             if (strlen($dPresbiteroDate) > 0) {
                 $sSQL .= '"'.$dPresbiteroDate.'"';
             } else {
@@ -405,11 +418,11 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $sSQL .= ')';
             $bGetKeyBack = true;
             
-				//echo $sSQL;
+				
             
             // Existing person (update)
         } else {
-            $sSQL = "UPDATE person_per SET per_Title = '".$sTitle."',per_FirstName = '".$sFirstName."',per_MiddleName = '".$sMiddleName."', per_LastName = '".$sLastName."', per_Suffix = '".$sSuffix."', per_Gender = ".$iGender.", per_Diacono = ".$iDiacono.", per_Presbitero = '".$iPresbitero."', per_Address1 = '".$sAddress1."', per_Address2 = '".$sAddress2."', per_Bairro = '".$sBairro."', per_City = '".$sCity."', per_State = '".$sState."', per_Zip = '".$sZip."', per_Country = '".$sCountry."', per_HomePhone = '".$sHomePhone."', per_WorkPhone = '".$sWorkPhone."', per_CellPhone = '".$sCellPhone."', per_Email = '".$sEmail."', per_WorkEmail = '".$sWorkEmail."', per_BirthMonth = ".$iBirthMonth.', per_BirthDay = '.$iBirthDay.', '.'per_BirthYear = '.$iBirthYear.', per_fam_ID = '.$iFamily.', per_Fmr_ID = '.$iFamilyRole.', per_cls_ID = '.$iClassification.', per_MembershipDate = ';
+            $sSQL = "UPDATE person_per SET per_Title = '".$sTitle."',per_FirstName = '".$sFirstName."',per_MiddleName = '".$sMiddleName."', per_LastName = '".$sLastName."', per_Suffix = '".$sSuffix."', per_Gender = ".$iGender.", per_Diacono = ".$iDiacono.", per_Presbitero = '".$iPresbitero."', per_Address1 = '".$sAddress1."', per_Address2 = '".$sAddress2."', per_Bairro = '".$sBairro."', per_City = '".$sCity."', per_State = '".$sState."', per_Zip = '".$sZip."', per_Country = '".$sCountry."', per_HomePhone = '".$sHomePhone."', per_WorkPhone = '".$sWorkPhone."', per_CellPhone = '".$sCellPhone."', per_Email = '".$sEmail."', per_WorkEmail = '".$sWorkEmail."', per_BirthMonth = ".$iBirthMonth.', per_BirthDay = '.$iBirthDay.', per_fam_ID = '.$iFamily.', per_Fmr_ID = '.$iFamilyRole.', per_cls_ID = '.$iClassification.', per_MembershipDate = ';
             if (strlen($dMembershipDate) > 0) {
                 $sSQL .= '"'.$dMembershipDate.'"';
             } else {
@@ -434,6 +447,12 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             } else {
                 $sSQL .= 'NULL';
             }
+            $sSQL .= ', per_BirthYear =';
+            if (strlen($iBirthYear) > 0) {
+                $sSQL .= '"'.$iBirthYear.'"';
+            } else {
+                $sSQL .= 'NULL';
+            }
                         
             $sSQL .= ', per_Flags='.$per_Flags;
 
@@ -442,7 +461,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $bGetKeyBack = false;
         }
 
-        //Execute the SQL
+       //Execute the SQL
+       //echo $sSQL; 
        RunQuery($sSQL);
 
         $note = new Note();
@@ -595,7 +615,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $sWorkEmail = '';
         $iBirthMonth = 0;
         $iBirthDay = 0;
-        $iBirthYear = 0;
+        $iBirthYear = '';
         $bHideAge = 0;
         $iOriginalFamily = 0;
         $iFamily = '0';
@@ -816,7 +836,8 @@ require 'Include/Header.php';
                     <div class="col-md-2">
                         <label><?= gettext('Ano de Nascimento') ?>:</label>
                         <input type="number" name="BirthYear" value="<?php echo $iBirthYear ?>" maxlength="4" size="5"
-                               placeholder="yyyy" class="form-control">
+                               placeholder="YYYY" class="form-control">
+                                                              
                         <?php if ($sBirthYearError) {
     ?><font color="red"><br><?php echo $sBirthYearError ?>
                             </font><?php
@@ -826,13 +847,24 @@ require 'Include/Header.php';
     ?><font
                             color="red"><?php echo $sBirthDateError ?></font><?php
 
-} ?>
+} ?>									
                     </div>
                     
+<div class="col-md-3">
+                       <br><br> <input type="checkbox" name="NoBirthYear"
+                                   value="0" <?php if ($bNoBirthYear) {
+                            echo ' checked';
+                        } ?>><?= gettext('Ano Não Informado') ?>    							
+                    </div>
+                                        
+                    </div>
+                    
+                                        
+             </div>
+                                       
                 </div>
             </div>
-         </div>
-       </div>             
+                    
     
     <div class="box box-info clearfix">
         <div class="box-header">
