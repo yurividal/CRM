@@ -24,7 +24,7 @@ if (!$_SESSION['bManageGroups']) {
 }
 
 //Set the page title
-$sPageTitle = gettext('Member Role Change');
+$sPageTitle = gettext('Alterar função de um membro de Sociedade Interna');
 
 //Get the GroupID from the querystring
 $iGroupID = FilterInput($_GET['GroupID'], 'int');
@@ -54,7 +54,7 @@ if (isset($_POST['Submit'])) {
 }
 
 //Get their current role
-$sSQL = 'SELECT per_FirstName, per_LastName, grp_Name, grp_RoleListID, lst_OptionID, '.
+$sSQL = 'SELECT per_FirstName, per_MiddleName, per_LastName, grp_Name, grp_RoleListID, lst_OptionID, '.
         'lst_OptionName AS sRoleName, p2g2r_rle_ID AS iRoleID '.
         'FROM person_per '.
         'LEFT JOIN person2group2role_p2g2r ON p2g2r_per_ID = per_ID '.
@@ -77,21 +77,25 @@ require 'Include/Header.php'
 
 <form method="post" action="MemberRoleChange.php?GroupID=<?= $iGroupID ?>&PersonID=<?= $iPersonID ?>&Return=<?= $iReturn ?>">
 
-<table cellpadding="4">
-	<tr>
-		<td align="right"><b><?= gettext('Group Name') ?>:</b></td>
+<table cellpadding="4" style="font-size:20px !important;  width: 80%;
+">
+	<tr style="height:60px;" >
+		<td align="left"><b><?= gettext('Sociedade') ?>:</b></td>
 		<td><?php echo $grp_Name ?></td>
 	</tr>
-	<tr>
-		<td align="right"><b><?= gettext("Member's Name") ?>:</b></td>
-		<td><?php echo $per_LastName.', '.$per_FirstName ?></td>
+	<tr style="height:60px;">
+		<td align="left"><b><?= gettext("Nome do Membro") ?>:</b></td>
+		
+		<td><?php echo $per_FirstName.' '.$per_MiddleName.' '.$per_LastName ?></td>
 	</tr>
-	<tr>
-		<td align="right"><b><?= gettext('Current Role') ?>:</b></td>
+	<tr style="height:60px;">
+		<td align="left"><b><?= gettext('Função Atual') ?>:</b></td>
+		
 		<td><?php echo $sRoleName ?></td>
 	</tr>
-	<tr>
-		<td align="right"><b><?= gettext('New Role') ?>:</b></td>
+	<tr style="height:60px;">
+		<td align="left"><b><?= gettext('Nova Função') ?>:</b></td>
+
 		<td>
 			<select name="NewRole">
 				<?php
@@ -113,9 +117,9 @@ require 'Include/Header.php'
 			</select>
 		</td>
 	</tr>
-	<tr>
+	<tr style="height:200px;">
 		<td colspan="2" align="center">
-			<input type="submit" class="btn" name="Submit" value="<?= gettext('Update') ?>">
+			<input type="submit" class="btn" name="Submit" value="<?= gettext('Salvar') ?>">
 			<?php
                 if ($iReturn) {
                     echo '&nbsp;&nbsp;<input type="button" class="btn" name="Cancel" value="'.gettext('Cancel')."\" onclick=\"document.location='GroupView.php?GroupID=".$iGroupID."';\">";
