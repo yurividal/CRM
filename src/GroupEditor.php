@@ -84,7 +84,7 @@ require 'Include/Header.php';
         </div>
         <div class="row">
           <div class="col-sm-3">
-            <label for="GroupType"><?= gettext('Type of Group') ?>:</label>
+            <label for="GroupType"><?= gettext('Tipo do Grupo') ?>:</label>
             <select class="form-control input-small" name="GroupType">
               <option value="0"><?= gettext('Unassigned') ?></option>
               <option value="0">-----------------------</option>
