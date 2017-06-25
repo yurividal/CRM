@@ -574,7 +574,8 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
                 // Loop through the rows
                 while ($aRow = mysqli_fetch_array($rsAssignedGroups)) {
                     extract($aRow); ?>
-                  <div class="col-md-3">
+                 <h4>Membro de:</h4>
+                  <div class="col-md-4">
                     <p><br/></p>
                     <!-- Info box -->
                     <div class="box box-info">
@@ -616,24 +617,24 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
                         <code>
                           <?php if ($_SESSION['bManageGroups']) {
                           ?>
-                            <a href="GroupView.php?GroupID=<?= $grp_ID ?>" class="btn btn-default" role="button"><i class="glyphicon glyphicon-list"></i></a>
+                           <!-- <a href="GroupView.php?GroupID=<?= $grp_ID ?>" class="btn btn-default" role="button"><i class="glyphicon glyphicon-list"></i></a> -->
                             <div class="btn-group">
-                              <button type="button" class="btn btn-default"><?= gettext('Action') ?></button>
+                              <button type="button" class="btn btn-default"><?= gettext('Editar') ?></button>
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                               </button>
                               <ul class="dropdown-menu" role="menu">
-                                <li><a href="MemberRoleChange.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Change Role') ?></a></li>
+                                <li><a href="MemberRoleChange.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Alterar Função') ?></a></li>
                                 <?php if ($grp_hasSpecialProps) {
                               ?>
-                                  <li><a href="GroupPropsEditor.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Update Properties') ?></a></li>
+                                  <li><a href="GroupPropsEditor.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Atualizar') ?></a></li>
                                 <?php
 
                           } ?>
                               </ul>
-                            </div>
-                            <a href="#" onclick="GroupRemove(<?= $grp_ID.', '.$iPersonID ?>);" class="btn btn-danger" role="button"><i class="fa fa-trash-o"></i></a>
+                            </div> <br><br>
+                            <a href="#" onclick="GroupRemove(<?= $grp_ID.', '.$iPersonID ?>);" class="btn btn-danger" role="button"><i class="fa fa-trash-o"></i> Remover desta Sociedade</a>
                           <?php
 
                       } ?>
@@ -652,7 +653,7 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
     if ($_SESSION['bManageGroups']) {
         ?>
                 <div class="alert alert-info">
-                  <h4><strong><?php echo gettext('Assign New Group'); ?> </strong></h4>
+                  <h4><strong><?php echo gettext('Atribuir a uma nova Sociedade Interna'); ?> </strong></h4>
                   <i class="fa fa-info-circle fa-fw fa-lg"></i> <span><?= gettext('Person will be assigned to the Group in the Default Role.') ?></span>
 
                   <p><br></p>
