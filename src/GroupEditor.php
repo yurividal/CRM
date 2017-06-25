@@ -155,7 +155,7 @@ require 'Include/Header.php';
 </div>
 <div class="box">
   <div class="box-header">
-    <h3 class="box-title"><?= gettext('Group Roles') ?>:</h3>
+    <h3 class="box-title"><?= gettext('Funções no Grupo') ?>:</h3>
   </div>
   <div class="box-body">
     <div class="alert alert-info alert-dismissable">
@@ -167,9 +167,9 @@ require 'Include/Header.php';
     <table class="table" class="table" id="groupRoleTable">
     </table>
       </div>
-    <label for="newRole"><?= gettext('New Role')?>: </label><input type="text" class="form-control" id="newRole" name="newRole">
+    <label for="newRole"><?= gettext('Nova Função')?>: </label><input type="text" class="form-control" id="newRole" name="newRole">
     <br>
-    <button type="button" id="addNewRole" class="btn btn-primary"><?= gettext('Add New Role')?></button>
+    <button type="button" id="addNewRole" class="btn btn-primary"><?= gettext('Adicionar Nova Função')?></button>
   </div>
 </div>
 <script>

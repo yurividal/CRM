@@ -1,0 +1,90 @@
+[13-Jun-2017 21:34:38 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/Include/ReportFunctions.php(28): RunQuery('SELECT * FROM f...')
+#2 /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/Reports/ChurchInfoReport.php(144): MakeSalutationUtility(NULL)
+#3 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(99): ChurchCRM\Reports\ChurchInfoReport->MakeSalutation(NULL)
+#4 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(129): PDF_EnvelopeReport->sGetFamilyString(Array)
+#5 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:37:27 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/Include/ReportFunctions.php(28): RunQuery('SELECT * FROM f...')
+#2 /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/Reports/ChurchInfoReport.php(144): MakeSalutationUtility(NULL)
+#3 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(99): ChurchCRM\Reports\ChurchInfoReport->MakeSalutation(NULL)
+#4 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(129): PDF_EnvelopeReport->sGetFamilyString(Array)
+#5 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:37:29 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/Include/ReportFunctions.php(28): RunQuery('SELECT * FROM f...')
+#2 /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/Reports/ChurchInfoReport.php(144): MakeSalutationUtility(NULL)
+#3 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(99): ChurchCRM\Reports\ChurchInfoReport->MakeSalutation(NULL)
+#4 /opt/lampp/htdocs/srm/CRM/src/Reports/YuriReports.php(129): PDF_EnvelopeReport->sGetFamilyString(Array)
+#5 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:42:21 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('SELECT a.per_Fi...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:42:49 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('SELECT a.per_Fi...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:42:51 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('SELECT a.per_Fi...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 21:42:58 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('SELECT a.per_Fi...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 22:18:34 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('select per_Firs...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 22:27:37 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('select a.per_ID...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 22:27:51 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('select a.per_ID...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 22:27:53 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('select a.per_ID...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252
+[13-Jun-2017 22:28:09 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:252
+Stack trace:
+#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(292): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
+#1 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(133): RunQuery('select a.per_ID...')
+#2 /opt/lampp/htdocs/srm/CRM/src/QuerySQL.php(68): RunFreeQuery()
+#3 {main}
+  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 252

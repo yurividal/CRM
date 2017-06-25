@@ -231,7 +231,7 @@ $("document").ready(function()
       },
       {
         width: '200px',
-        title: 'Ordem',
+        title: 'Sequence',
         data: 'lst_OptionSequence',
         className: "dt-body-center",
         render: function(data, type, full, meta)
@@ -258,7 +258,7 @@ $("document").ready(function()
       },
       {
         width: 'auto',
-        title: 'Remover',
+        title: 'Delete',
         render: function(data, type, full, meta)
         {
           return '<button type="button" id="roleDelete-' + full.lst_OptionID + '" class="btn btn-danger deleteRole">Delete</button>';
