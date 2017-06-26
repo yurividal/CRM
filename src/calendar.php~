@@ -49,7 +49,7 @@ require 'Include/Header.php'; ?>
 
 <!-- fullCalendar 2.2.5 -->
 
-<script src="<?= SystemURLs::getRootPath()  ?>/skin/fullcalendar/fullcalendar.min.js"></script>
+<script src="<?= SystemURLs::getRootPath()  ?>/skin/fullcalendar/fullcalendar.js"></script>
 <script>
   $(function () {
     /* initialize the calendar
