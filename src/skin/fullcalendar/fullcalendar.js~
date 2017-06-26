@@ -8492,6 +8492,14 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 		this.trigger('eventAfterAllRender');
 	},
 	
+	eventRender: function (event, element) {
+    var eventDate = event.start;
+    var calendarDate = $('#activitiesCalendar').fullCalendar('getDate');
+    if (eventDate.get('month') !== calendarDate.get('month')) {
+        return false;
+    }
+},
+
 
 	// Signals that all event elements are about to be removed
 	triggerEventUnrender: function() {

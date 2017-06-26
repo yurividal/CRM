@@ -319,7 +319,7 @@ $sHomePhone = ExpandPhoneNumber($fam_HomePhone, $fam_Country, $dummy);
 
                     } ?>
           <a class="btn btn-app btn-danger" role="button" href="FamilyList.php"><i
-              class="fa fa-list-ul"></i><?= gettext('Family List') ?></a>
+              class="fa fa-list-ul"></i><?= gettext('Lista de Famílias') ?></a>
           <?php if (($next_id > 0)) {
                         ?>
             <a class="btn btn-app" role="button" href="FamilyView.php?FamilyID=<?= $next_id ?>"><i
@@ -353,7 +353,7 @@ $sHomePhone = ExpandPhoneNumber($fam_HomePhone, $fam_Country, $dummy);
                 <?php if ($bOkToEdit) {
         ?>
                     <button class="btn btn-app bg-orange"  id="activateDeactivate">
-                        <i class="fa <?= (empty($fam_DateDeactivated) ? 'fa-times-circle-o' : 'fa-check-circle-o') ?> "></i><?= gettext((empty($fam_DateDeactivated) ? 'Deactivate' : 'Activate') . ' this Family') ?></button>
+                        <i class="fa <?= (empty($fam_DateDeactivated) ? 'fa-times-circle-o' : 'fa-check-circle-o') ?> "></i><?= gettext((empty($fam_DateDeactivated) ? 'Desativar' : 'Ativar') . ' esta Família') ?></button>
                 <?php
 
     } ?>
@@ -451,14 +451,14 @@ $sHomePhone = ExpandPhoneNumber($fam_HomePhone, $fam_Country, $dummy);
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#timeline" aria-controls="timeline" role="tab"
                                                           data-toggle="tab"><?= gettext("Timeline") ?></a></li>
-                <li role="presentation"><a href="#properties" aria-controls="properties" role="tab"
-                                           data-toggle="tab"><?= gettext("Assigned Properties") ?></a></li>
+                <!--<li role="presentation"><a href="#properties" aria-controls="properties" role="tab"
+                                           data-toggle="tab"><?= gettext("Assigned Properties") ?></a></li> -->
                 <?php if ($_SESSION['bFinance']) {
         ?>
-                    <li role="presentation"><a href="#finance" aria-controls="finance" role="tab"
+                    <!--<li role="presentation"><a href="#finance" aria-controls="finance" role="tab"
                                                data-toggle="tab"><?= gettext("Automatic Payments") ?></a></li>
                     <li role="presentation"><a href="#pledges" aria-controls="pledges" role="tab"
-                                               data-toggle="tab"><?= gettext("Pledges and Payments") ?></a></li>
+                                               data-toggle="tab"><?= gettext("Pledges and Payments") ?></a></li> -->
                     <?php
 
     } ?>
@@ -652,7 +652,7 @@ $sHomePhone = ExpandPhoneNumber($fam_HomePhone, $fam_Country, $dummy);
                         </div>
                     </div>
                 </div>
-                <?php if ($_SESSION['bFinance']) {
+                <?php if (0){//$_SESSION['bFinance']) {
         ?>
                 <div role="tab-pane fade" class="tab-pane" id="finance">
                     <div class="main-box clearfix">
@@ -880,7 +880,7 @@ $sHomePhone = ExpandPhoneNumber($fam_HomePhone, $fam_Country, $dummy);
 
     } ?>
 
-                            <?php if ($_SESSION['bCanvasser']) {
+                            <?php if (0){ //$_SESSION['bCanvasser']) {
         ?>
 
                             <p align="center">

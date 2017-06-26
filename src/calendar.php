@@ -48,7 +48,8 @@ require 'Include/Header.php'; ?>
 &nbsp;
 
 <!-- fullCalendar 2.2.5 -->
-<script src="<?= SystemURLs::getRootPath()  ?>/skin/fullcalendar/fullcalendar.min.js"></script>
+
+<script src="<?= SystemURLs::getRootPath()  ?>/skin/fullcalendar/fullcalendar.js"></script>
 <script>
   $(function () {
     /* initialize the calendar
@@ -59,11 +60,26 @@ require 'Include/Header.php'; ?>
         center: 'title',
         right: 'month,basicDay,listMonth'
       },
-      height: 500,
+      height: 700,
       locale: '<?= $localeInfo->getLanguageCode() ?>',
-      events: window.CRM.root + '/api/calendar/events'
+      events: window.CRM.root + '/api/calendar/events',
+       
+		eventRender: function(event, element, view){
+        var evStart = moment(view.intervalStart).subtract(1, 'days');
+        var evEnd = moment(view.intervalEnd).subtract(1, 'days');
+        if (!event.start.isAfter(evStart) ||
+        event.start.isAfter(evEnd)) { return false; }
+},
+     
+      
     });
+    
  });
+ 
+ 
+ 
+ 
+ 
 </script>
 
 <?php require 'Include/Footer.php'; ?>
