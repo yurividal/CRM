@@ -422,7 +422,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             
             // Existing person (update)
         } else {
-            $sSQL = "UPDATE person_per SET per_Title = '".$sTitle."',per_FirstName = '".$sFirstName."',per_MiddleName = '".$sMiddleName."', per_LastName = '".$sLastName."', per_Suffix = '".$sSuffix."', per_Gender = ".$iGender.", per_Diacono = ".$iDiacono.", per_Presbitero = '".$iPresbitero."', per_Address1 = '".$sAddress1."', per_Address2 = '".$sAddress2."', per_Bairro = '".$sBairro."', per_City = '".$sCity."', per_State = '".$sState."', per_Zip = '".$sZip."', per_Country = '".$sCountry."', per_HomePhone = '".$sHomePhone."', per_WorkPhone = '".$sWorkPhone."', per_CellPhone = '".$sCellPhone."', per_Email = '".$sEmail."', per_WorkEmail = '".$sWorkEmail."', per_BirthMonth = ".$iBirthMonth.', per_BirthDay = '.$iBirthDay.', per_fam_ID = '.$iFamily.', per_Fmr_ID = '.$iFamilyRole.', per_cls_ID = '.$iClassification.', per_MembershipDate = ';
+            $sSQL = "UPDATE person_per SET per_Title = '".$sTitle."',per_FirstName = '".$sFirstName."',per_MiddleName = '".$sMiddleName."', per_LastName = '".$sLastName."', per_Suffix = '".$sSuffix."', per_Gender = ".$iGender.", per_Diacono = ".$iDiacono.", per_Presbitero = '".$iPresbitero."', per_Address1 = '".$sAddress1."', per_Address2 = '".$sAddress2."', per_Bairro = '".$sBairro."', per_City = '".$sCity."', per_State = '".$sState."', per_Zip = '".$sZip."', per_Country = '".$sCountry."', per_HomePhone = '".$sHomePhone."', per_WorkPhone = '".$sWorkPhone."', per_CellPhone = '".$sCellPhone."', per_Email = '".$sEmail."', per_WorkEmail = '".$sWorkEmail."', per_BirthMonth = ".$iBirthMonth.', per_BirthDay = '.$iBirthDay.', per_fam_ID = '.$iFamily.', per_Fmr_ID = '.$iFamilyRole.', per_cls_ID = '.$iClassification.', per_MembershipDate = '; 
+
             if (strlen($dMembershipDate) > 0) {
                 $sSQL .= '"'.$dMembershipDate.'"';
             } else {
@@ -463,7 +464,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
 
        //Execute the SQL
        //echo $sSQL; 
-       RunQuery($sSQL);
+       RunQuery($sSQL); 
 
         $note = new Note();
         $note->setEntered($_SESSION['iUserID']);
@@ -913,9 +914,9 @@ require 'Include/Header.php';
     <div class="box box-info clearfix">
         <div class="box-header">
             <h3 class="box-title"><?= gettext('Contact Info') ?></h3>
-            <div class="pull-right"><br/>
+            <!-- <div class="pull-right"><br/>
                 <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
-            </div>
+            </div> -->
         </div><!-- /.box-header -->
         <div class="box-body">
             <?php if (!SystemConfig::getValue('bHidePersonAddress')) { /* Person Address can be hidden - General Settings */ ?>
@@ -1180,6 +1181,8 @@ require 'Include/Header.php';
                 </div>
             </div>
         </div>
+        
+        
     </div>
 
 <?php if ($numCustomFields > 0) {
@@ -1319,13 +1322,172 @@ require 'Include/Header.php';
                 </div>
                  
             </div>
+         <?php    
             
+            if ($iPersonID < 1) {
+        // echo '</span>';
+    ?>
+ 					<!--		<div class="col-md-3"> 
+ 								 <label><?= gettext('Sociedade Interna') ?></label><br/>   								                     
+    								                       <select name="GroupAssignID" class="form-control">  -->
+                    <?php while ($aRow = mysqli_fetch_array($rsGroups)) {
+            extract($aRow);
+
+                      //If the property doesn't already exist for this Person, write the <OPTION> tag
+                      if (strlen(strstr($sAssignedGroups, ','.$grp_ID.',')) == 0) {
+                        //  echo '<option value="'.$grp_ID.'">'.$grp_Name.'</option>';
+                      }
+        } ?> 
+                <!--  </select> -->
+                        
+					           
             
+        
+       
+       <?php }   ?>
+       
+
+        
+
+       </div> </div>
+        
+ <!-- inicio do meu codigo de grupos yuri -->
+ <?php if ($iPersonID > 0) {
+    ?> 
+  
+       <div class="box box-info clearfix">
+       
+       <div class="box-header">
+            <h3 class="box-title"><?= gettext('Sociedades Internas') ?></h3>
+            </div><!-- /.box-header -->
+        <div class="box-body">     
+
+
+            <div class="main-box clearfix">
+            <div class="main-box-body clearfix">
+              <?php
+              //Was anything returned?
+              if (mysqli_num_rows($rsAssignedGroups) == 0) {
+                  ?>
+                <br>
+                <div class="alert alert-warning">
+                  <i class="fa fa-question-circle fa-fw fa-lg"></i> <span><?= gettext('Não atribuído a nenhuma sociedade interna') ?></span>
+                </div>
+              <?php
+              } else {
+                  echo '<div class="row">';
+                // Loop through the rows
+                while ($aRow = mysqli_fetch_array($rsAssignedGroups)) {
+                    extract($aRow); ?>
+                  <div class="col-md-3">
+                    <p><br/></p>
+                    <!-- Info box -->
+                    <div class="box box-info">
+                      <div class="box-header">
+                        <h3 class="box-title"><a href="GroupView.php?GroupID=<?= $grp_ID ?>"><?= $grp_Name ?></a></h3>
+
+                        <div class="box-tools pull-right">
+                          <div class="label bg-aqua"><?= $roleName ?></div>
+                        </div>
+                      </div>
+                      <?php
+                      // If this group has associated special properties, display those with values and prop_PersonDisplay flag set.
+                      if ($grp_hasSpecialProps) {
+                          // Get the special properties for this group
+                        $sSQL = 'SELECT groupprop_master.* FROM groupprop_master WHERE grp_ID = '.$grp_ID." AND prop_PersonDisplay = 'true' ORDER BY prop_ID";
+                          $rsPropList = RunQuery($sSQL);
+                          $sSQL = 'SELECT * FROM groupprop_'.$grp_ID.' WHERE per_ID = '.$iPersonID;
+                          $rsPersonProps = RunQuery($sSQL);
+                          $aPersonProps = mysqli_fetch_array($rsPersonProps, MYSQLI_BOTH);
+                          echo '<div class="box-body">';
+                          while ($aProps = mysqli_fetch_array($rsPropList)) {
+                              extract($aProps);
+                              $currentData = trim($aPersonProps[$prop_Field]);
+                              if (strlen($currentData) > 0) {
+                                  $sRowClass = AlternateRowStyle($sRowClass);
+                                  if ($type_ID == 11) {
+                                      $prop_Special = $sPhoneCountry;
+                                  }
+                                  echo '<strong>'.$prop_Name.'</strong>: '.displayCustomField($type_ID, $currentData, $prop_Special).'<br/>';
+                              }
+                          }
+                          echo '</div><!-- /.box-body -->';
+                      } ?>
+                      <div class="box-footer">
+                        <code>
+                          <?php if ($_SESSION['bManageGroups']) {
+                          ?>
+                           <!-- <a href="GroupView.php?GroupID=<?= $grp_ID ?>" class="btn btn-default" role="button"><i class="glyphicon glyphicon-list"></i></a> -->
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-default"><?= gettext('Editar') ?></button>
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+                              <ul class="dropdown-menu" role="menu">
+                                <li><a href="MemberRoleChange.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Alterar Função') ?></a></li>
+                                <?php if ($grp_hasSpecialProps) {
+                              ?>
+                                  <li><a href="GroupPropsEditor.php?GroupID=<?= $grp_ID ?>&PersonID=<?= $iPersonID ?>"><?= gettext('Atualizar') ?></a></li>
+                                <?php
+
+                          } ?>
+                              </ul>
+                            </div> <br><br>
+                            <a href="#" onclick="GroupRemove(<?= $grp_ID.', '.$iPersonID ?>);" class="btn btn-danger" role="button"><i class="fa fa-trash-o"></i> Remover desta Sociedade</a>
+                          <?php
+
+                      } ?>
+                        </code>
+                      </div>
+                      <!-- /.box-footer-->
+                    </div>
+                    <!-- /.box -->
+                  </div>
+                  <?php
+                  // NOTE: this method is crude.  Need to replace this with use of an array.
+                  $sAssignedGroups .= $grp_ID.',';
+                }
+                  echo '</div>';
+              }
+    if ($_SESSION['bManageGroups']) {
+        ?>
+                       <div class="col-md-4">
+<div class="alert alert-info">
+                  <h4><strong><?php echo gettext('Atribuir a uma nova Sociedade Interna'); ?> </strong></h4>
+                  <i class="fa fa-info-circle fa-fw fa-lg"></i> <span><?= gettext('Person will be assigned to the Group in the Default Role.') ?></span>
+
+                  <p><br></p>
+                  <select style="color:#000000" name="GroupAssignID">
+                    <?php while ($aRow = mysqli_fetch_array($rsGroups)) {
+            extract($aRow);
+
+                      //If the property doesn't already exist for this Person, write the <OPTION> tag
+                      if (strlen(strstr($sAssignedGroups, ','.$grp_ID.',')) == 0) {
+                          echo '<option value="'.$grp_ID.'">'.$grp_Name.'</option>';
+                      }
+        } ?>
+                  </select>
+                  <a href="#" onclick="GroupAdd()" class="btn btn-success" role="button"><?= gettext('Assign User to Group') ?></a>
+                  <br>
+                </div>                </div>
+              <?php
+    } ?>
+            </div>
+          </div>   
+          
         </div>
     </div>
+   <?php }
+    ?>
+
     
-   
+    <!-- fim do meu codigo de grupos yuri -->
+
     
+   <div class="row">
+
+            <div class="pull-right" style="padding: 20px; padding-right: 1%;">
   
     <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
     <?php if ($_SESSION['bAddRecords']) {
@@ -1337,7 +1499,9 @@ require 'Include/Header.php';
                         } else {
                             echo 'SelectList.php?mode=person';
                         } ?>';">
+                        </div>                                               </div>                       
 </form>
+
 
 <script type="text/javascript">
 	  var person_ID = <?= $iPersonID ?>;
@@ -1356,7 +1520,7 @@ function GroupAdd() {
   }
   
   function GroupRemove(Group, Person) {
-    var answer = confirm("<?= gettext('Are you sure you want to remove this person from the Group') ?>");
+    var answer = confirm("<?= gettext('Tem certeza que deseja remover esta pessoa desta sociedade') ?>");
     if (answer)
       $.ajax({
         method: "POST",

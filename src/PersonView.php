@@ -565,7 +565,7 @@ SelectWhichAddress($Address1, $Address2, $per_Address1, $per_Address2, $fam_Addr
                   ?>
                 <br>
                 <div class="alert alert-warning">
-                  <i class="fa fa-question-circle fa-fw fa-lg"></i> <span><?= gettext('No group assignments.') ?></span>
+                  <i class="fa fa-question-circle fa-fw fa-lg"></i> <span><?= gettext('Não atribuído a nenhuma sociedade interna') ?></span>
                 </div>
               <?php
 

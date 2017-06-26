@@ -1,0 +1,2 @@
+[26-Jun-2017 18:10:24 America/Sao_Paulo] PHP Fatal error:  Call to a member function getForPerson() on null in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 1351
+[26-Jun-2017 18:12:30 America/Sao_Paulo] PHP Fatal error:  Call to a member function getNotesForPerson() on null in /opt/lampp/htdocs/srm/CRM/src/PersonEditor.php on line 1471
