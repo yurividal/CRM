@@ -90,8 +90,8 @@ require 'Include/Header.php';
 
     <?php
     if ($_SESSION['bManageGroups']) {
-        echo '<a class="btn btn-app" href="GroupEditor.php?GroupID=' . $thisGroup->getId() . '"><i class="fa fa-pencil"></i>' . gettext('Edit this Group') . '</a>';
-        echo '<button class="btn btn-app"  id="deleteGroupButton"><i class="fa fa-trash"></i>' . gettext('Delete this Group') . '</button>'; ?>
+        echo '<a class="btn btn-app" href="GroupEditor.php?GroupID=' . $thisGroup->getId() . '"><i class="fa fa-pencil"></i>' . gettext('Editar Grupo') . '</a>';
+        echo '<button class="btn btn-app"  id="deleteGroupButton"><i class="fa fa-trash"></i>' . gettext('Deletar Grupo') . '</button>'; ?>
 
 
       <!-- MEMBER ROLE MODAL-->
@@ -100,18 +100,18 @@ require 'Include/Header.php';
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="upload-Image-label"><?= gettext('Change Member Role') ?></h4>
+              <h4 class="modal-title" id="upload-Image-label"><?= gettext('Alterar função de Membro') ?></h4>
             </div>
             <div class="modal-body">
-              <span style="color: red"><?= gettext('Please select target role for member') ?>:</span>
+              <span style="color: red"><?= gettext('Por favor selecione a nova função para o membro') ?>:</span>
               <input type="hidden" id="changingMemberID">
               <p class="ShadedBox" id="changingMemberName"></p>
               <select name="newRoleSelection" id="newRoleSelection">
               </select>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal"><?= gettext('Close') ?></button>
-              <button name="confirmMembershipChange" id="confirmMembershipChange" type="button" class="btn btn-danger"><?= gettext('Change Membership') ?></button>
+              <button type="button" class="btn btn-default" data-dismiss="modal"><?= gettext('Fechar') ?></button>
+              <button name="confirmMembershipChange" id="confirmMembershipChange" type="button" class="btn btn-danger"><?= gettext('Alterar Memresia') ?></button>
             </div>
           </div>
         </div>
@@ -147,9 +147,9 @@ require 'Include/Header.php';
           echo '<a class="btn btn-app" href="GroupPropsFormEditor.php?GroupID='.$thisGroup->getId().'"><i class="fa fa-list-alt"></i>'.gettext('Edit Group-Specific Properties Form').'</a>';
       }
     }
-    echo '<a class="btn btn-app" href="GroupView.php?Action=AddGroupToCart&amp;GroupID='.$thisGroup->getId().'"><i class="fa fa-users"></i>'.gettext('Add Group Members to Cart').'</a>';
+    echo '<a class="btn btn-app" href="GroupView.php?Action=AddGroupToCart&amp;GroupID='.$thisGroup->getId().'"><i class="fa fa-users"></i>'.gettext('Adicionar Membros ao Carrinho').'</a>';
 
-    echo '<a class="btn btn-app" href="MapUsingGoogle.php?GroupID='.$thisGroup->getId().'"><i class="fa fa-map-marker"></i>'.gettext('Map this group').'</a>';
+    echo '<a class="btn btn-app" href="MapUsingGoogle.php?GroupID='.$thisGroup->getId().'"><i class="fa fa-map-marker"></i>'.gettext('Mapa deste grupo').'</a>';
 
 // Email Group link
 // Note: This will email entire group, even if a specific role is currently selected.
@@ -190,7 +190,7 @@ require 'Include/Header.php';
         // Display link
         ?>
         <div class="btn-group">
-          <a  class="btn btn-app" href="mailto:<?= mb_substr($sEmailLink, 0, -3) ?>"><i class="fa fa-send-o"></i><?= gettext('Email Group') ?></a>
+          <a  class="btn btn-app" href="mailto:<?= mb_substr($sEmailLink, 0, -3) ?>"><i class="fa fa-send-o"></i><?= gettext('Email para Groupo') ?></a>
           <button type="button" class="btn btn-app dropdown-toggle" data-toggle="dropdown" >
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
@@ -245,7 +245,7 @@ require 'Include/Header.php';
     if ($sPhoneLink) {
         if ($bEmailMailto) { // Does user have permission to email groups
         // Display link
-        echo '<a class="btn btn-app" href="javascript:void(0)" onclick="allPhonesCommaD()"><i class="fa fa-mobile-phone"></i>'.gettext('Text Group').'</a>';
+        echo '<a class="btn btn-app" href="javascript:void(0)" onclick="allPhonesCommaD()"><i class="fa fa-mobile-phone"></i>'.gettext('SMS Para Grupo').'</a>';
             echo '<script>function allPhonesCommaD() {prompt("'.gettext("Press CTRL + C to copy all group members\' phone numbers").'", "'.mb_substr($sPhoneLink, 0, -2).'")};</script>';
         }
     }
@@ -257,25 +257,25 @@ require 'Include/Header.php';
     <div class="box-body">
         <?= $thisGroup->getDescription() ?>
         <p/><p/><p/>
-        <button class="btn btn-success" type="button">
+        <!--<button class="btn btn-success" type="button">
             <?= gettext('Type of Group') ?> <span class="badge"> <?= $sGroupType ?> </span>
-        </button>
+        </button> -->
         <button class="btn btn-info" type="button">
         <?php if (!is_null($defaultRole)) {
         ?>
-            <?= gettext('Default Role') ?> <span class="badge"><?= $defaultRole->getOptionName() ?></span>
+            <?= gettext('Função Padrão') ?> <span class="badge"><?= $defaultRole->getOptionName() ?></span>
         <?php
 
     } ?>
         </button>
         <button class="btn btn-primary" type="button">
-            <?= gettext('Total Members') ?> <span class="badge" id="iTotalMembers"></span>
+            <?= gettext('Total de Membros') ?> <span class="badge" id="iTotalMembers"></span>
         </button>
     </div>
 </div>
 
 
-<div class="box">
+<!--<div class="box">
   <div class="box-header with-border">
     <h3 class="box-title"><?= gettext('Quick Settings') ?></h3>
   </div>
@@ -285,170 +285,12 @@ require 'Include/Header.php';
           <div class="col-sm-3"> <b><?= gettext('Email export') ?>:</b> <input data-size="small" id="isGroupEmailExport" type="checkbox" data-toggle="toggle" data-on="<?= gettext('Include') ?>" data-off="<?= gettext('Exclude') ?>"></div>
       </form>
   </div>
-</div>
+</div> -->
 
-      <div class="box">
-  <div class="box-header with-border">
-    <h3 class="box-title"><?= gettext('Group Properties') ?></h3>
-  </div>
-  <div class="box-body">
-      <table width="100%">
-      <tr>
-        <td>
-          <b><?= gettext('Group-Specific Properties') ?>:</b>
-
-          <?php
-          if ($thisGroup->getHasSpecialProps()) {
-              // Create arrays of the properties.
-            for ($row = 1; $row <= $numRows; $row++) {
-                $aRow = mysqli_fetch_array($rsPropList, MYSQLI_BOTH);
-                extract($aRow);
-
-                $aNameFields[$row] = $prop_Name;
-                $aDescFields[$row] = $prop_Description;
-                $aFieldFields[$row] = $prop_Field;
-                $aTypeFields[$row] = $type_ID;
-            }
-
-            // Construct the table
-
-            if (!$numRows) {
-                echo '<p><?= gettext("No member properties have been created")?></p>';
-            } else {
-                ?>
-              <table width="100%" cellpadding="2" cellspacing="0">
-                <tr class="TableHeader">
-                  <td><?= gettext('Type') ?></td>
-                  <td><?= gettext('Name') ?></td>
-                  <td><?= gettext('Description') ?></td>
-                </tr>
-                <?php
-                $sRowClass = 'RowColorA';
-                for ($row = 1; $row <= $numRows; $row++) {
-                    $sRowClass = AlternateRowStyle($sRowClass);
-                    echo '<tr class="'.$sRowClass.'">';
-                    echo '<td>'.$aPropTypes[$aTypeFields[$row]].'</td>';
-                    echo '<td>'.$aNameFields[$row].'</td>';
-                    echo '<td>'.$aDescFields[$row].'&nbsp;</td>';
-                    echo '</tr>';
-                }
-                echo '</table>';
-            }
-          } else {
-              echo '<p>'.gettext('Disabled for this group.').'</p>';
-          }
-
-            //Print Assigned Properties
-            echo '<br><hr/>';
-            echo '<b>'.gettext('Assigned Properties').':</b>';
-            $sAssignedProperties = ',';
-
-            //Was anything returned?
-            if (mysqli_num_rows($rsAssignedProperties) == 0) {
-                // No, indicate nothing returned
-              echo '<p>'.gettext('No property assignments').'.</p>';
-            } else {
-                // Display table of properties
-              ?>
-              <table width="100%" cellpadding="2" cellspacing="0">
-                <tr class="TableHeader">
-                  <td width="15%" valign="top"><b><?= gettext('Type') ?></b>
-                  <td valign="top"><b><?= gettext('Name') ?></b>
-                  <td valign="top"><b><?= gettext('Value') ?></td>
-                  <?php
-                  if ($_SESSION['bManageGroups']) {
-                      echo '<td valign="top"><b>'.gettext('Edit Value').'</td>';
-                      echo '<td valign="top"><b>'.gettext('Remove').'</td>';
-                  }
-                echo '</tr>';
-
-                $last_pro_prt_ID = '';
-                $bIsFirst = true;
-
-                  //Loop through the rows
-                  while ($aRow = mysqli_fetch_array($rsAssignedProperties)) {
-                      $pro_Prompt = '';
-                      $r2p_Value = '';
-
-                      extract($aRow);
-
-                      if ($pro_prt_ID != $last_pro_prt_ID) {
-                          echo '<tr class="';
-                          if ($bIsFirst) {
-                              echo 'RowColorB';
-                          } else {
-                              echo 'RowColorC';
-                          }
-                          echo '"><td><b>'.$prt_Name.'</b></td>';
-
-                          $bIsFirst = false;
-                          $last_pro_prt_ID = $pro_prt_ID;
-                          $sRowClass = 'RowColorB';
-                      } else {
-                          echo '<tr class="'.$sRowClass.'">';
-                          echo '<td valign="top">&nbsp;</td>';
-                      }
-
-                      echo '<td valign="top">'.$pro_Name.'&nbsp;</td>';
-                      echo '<td valign="top">'.$r2p_Value.'&nbsp;</td>';
-
-                      if (strlen($pro_Prompt) > 0 && $_SESSION['bManageGroups']) {
-                          echo '<td valign="top"><a href="PropertyAssign.php?GroupID='.$iGroupID.'&amp;PropertyID='.$pro_ID.'">'.gettext('Edit Value').'</a></td>';
-                      } else {
-                          echo '<td>&nbsp;</td>';
-                      }
-
-                      if ($_SESSION['bManageGroups']) {
-                          echo '<td valign="top"><a href="PropertyUnassign.php?GroupID='.$iGroupID.'&amp;PropertyID='.$pro_ID.'">'.gettext('Remove').'</a>';
-                      } else {
-                          echo '<td>&nbsp;</td>';
-                      }
-
-                      echo '</tr>';
-
-                    //Alternate the row style
-                    $sRowClass = AlternateRowStyle($sRowClass);
-
-                      $sAssignedProperties .= $pro_ID.',';
-                  }
-
-                echo '</table>';
-            }
-
-                if ($_SESSION['bManageGroups']) {
-                    echo '<form method="post" action="PropertyAssign.php?GroupID='.$iGroupID.'">';
-                    echo '<p>';
-                    echo '<span>'.gettext('Assign a New Property:').'</span>';
-                    echo '<select name="PropertyID">';
-
-                    while ($aRow = mysqli_fetch_array($rsProperties)) {
-                        extract($aRow);
-
-                    //If the property doesn't already exist for this Person, write the <OPTION> tag
-                    if (strlen(strstr($sAssignedProperties, ','.$pro_ID.',')) == 0) {
-                        echo '<option value="'.$pro_ID.'">'.$pro_Name.'</option>';
-                    }
-                    }
-
-                    echo '</select>';
-                    echo ' <input type="submit" class="btn btn-success" value="'.gettext('Assign').'" name="Submit" style="font-size: 8pt;">';
-                    echo '</p></form>';
-                } else {
-                    echo '<br><br><br>';
-                }
-                ?>
-
-
-
-                </td>
-              </tr>
-            </table>
-            </div>
-            </div>
 
             <div class="box">
               <div class="box-header with-border">
-                <h3 class="box-title"><?= gettext('Group Members:') ?></h3>
+                <h3 class="box-title"><?= gettext('Membros do Grupo:') ?></h3>
               </div>
               <div class="box-body">
                 <!-- START GROUP MEMBERS LISTING  -->
@@ -456,20 +298,20 @@ require 'Include/Header.php';
                 </table>
                 <div class="box">
                   <div class="box-header with-border">
-                    <h3 class="box-title"><?php echo gettext('Group members: '); ?></h3>
+                    <h3 class="box-title"><?php echo gettext('Membros do Grupo: '); ?></h3>
                   </div>
                   <div class="box-body">
                     <table class="table" id="depositsTable"></table>
-                    <button type="button" id="deleteSelectedRows" class="btn btn-danger" disabled> <?= gettext('Remove Selected Members from group') ?> </button>
+                    <button type="button" id="deleteSelectedRows" class="btn btn-danger" disabled> <?= gettext('Remover Membros Selecionados do Grupo') ?> </button>
                     <div class="btn-group">
-                      <button type="button" id="addSelectedToCart" class="btn btn-success"  disabled> <?= gettext('Add Selected Members to Cart') ?></button>
+                      <button type="button" id="addSelectedToCart" class="btn btn-success"  disabled> <?= gettext('Adicionar Membros Selecionados ao Carrinho') ?></button>
                       <button type="button" id="buttonDropdown" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false" disabled>
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <ul class="dropdown-menu" role="menu">
-                        <li><a id="addSelectedToGroup"   disabled> <?= gettext('Add Selected Members to Group') ?></a></li>
-                        <li><a id="moveSelectedToGroup"  disabled> <?= gettext('Move Selected Members to Group') ?></a></li>
+                        <li><a id="addSelectedToGroup"   disabled> <?= gettext('Adicionar Membros Selecionados ao Grupo') ?></a></li>
+                        <li><a id="moveSelectedToGroup"  disabled> <?= gettext('Mover Membros Selecionados para Grupo') ?></a></li>
                       </ul>
                     </div>
                   </div>
@@ -477,7 +319,7 @@ require 'Include/Header.php';
                 </form>
                 <!-- END GROUP MEMBERS LISTING -->
                 <form action="#" method="get" class="sidebar-form">
-                  <label for="addGroupMember"><?= gettext('Add Group Member: ') ?></label>
+                  <label for="addGroupMember"><?= gettext('Adicionar Membro: ') ?></label>
                   <select class="form-control personSearch" name="addGroupMember" style="width:100%">
                   </select>
                 </form>

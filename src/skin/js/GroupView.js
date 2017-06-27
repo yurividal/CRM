@@ -257,15 +257,15 @@ function initDataTable() {
     columns: [
       {
         width: 'auto',
-        title: 'Name',
+        title: 'Nome',
         data: 'PersonId',
         render: function (data, type, full, meta) {
-          return '<img data-name="'+full.Person.FirstName + ' ' + full.Person.LastName + '" data-src="' + window.CRM.root + '/api/persons/' + full.PersonId + '/thumbnail" class="direct-chat-img initials-image"> &nbsp <a href="PersonView.php?PersonID="' + full.PersonId + '"><a target="_top" href="PersonView.php?PersonID=' + full.PersonId + '">' + full.Person.FirstName + " " + full.Person.LastName + '</a>';
+          return '<img data-name="'+full.Person.FirstName + ' ' + full.Person.MiddleName+ ' ' + full.Person.LastName + '" data-src="' + window.CRM.root + '/api/persons/' + full.PersonId + '/thumbnail" class="direct-chat-img initials-image"> &nbsp <a href="PersonView.php?PersonID="' + full.PersonId + '"><a target="_top" href="PersonView.php?PersonID=' + full.PersonId + '">' + full.Person.FirstName + " " + full.Person.MiddleName+ " " + full.Person.LastName + '</a>';
         }
       },
       {
         width: 'auto',
-        title: 'Group Role',
+        title: 'Função',
         data: 'RoleId',
         render: function (data, type, full, meta) {
           thisRole = $(window.CRM.groupRoles).filter(function (index, item) {
@@ -276,29 +276,14 @@ function initDataTable() {
       },
       {
         width: 'auto',
-        title: 'Address',
+        title: 'Endereço',
         render: function (data, type, full, meta) {
           return full.Person.Address1 + " " + full.Person.Address2;
         }
       },
       {
         width: 'auto',
-        title: 'City',
-        data: 'Person.City'
-      },
-      {
-        width: 'auto',
-        title: 'State',
-        data: 'Person.State'
-      },
-      {
-        width: 'auto',
-        title: 'ZIP',
-        data: 'Person.Zip'
-      },
-      {
-        width: 'auto',
-        title: 'Cell Phone',
+        title: 'Celular',
         data: 'Person.CellPhone'
       },
       {
