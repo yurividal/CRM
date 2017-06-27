@@ -42,22 +42,22 @@ $(document).ready(function () {
     columns: [
       {
         width: 'auto',
-        title: 'Group Name',
+        title: 'Sociedade',
         data: 'Name',
         render: function (data, type, full, meta) {
-          return '<a href=\'GroupView.php?GroupID=' + full.Id + '\'><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-search-plus fa-stack-1x fa-inverse"></i></span></a><a href=\'GroupEditor.php?GroupID=' + full.Id + '\'><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-pencil fa-stack-1x fa-inverse"></i></span></a>' + data;
+          return data + '<br> <a href=\'GroupView.php?GroupID=' + full.Id + '\'><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-search-plus fa-stack-1x fa-inverse"></i></span> Ver Membros </a><br><a href=\'GroupEditor.php?GroupID=' + full.Id + '\'><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-pencil fa-stack-1x fa-inverse"></i></span>Editar Grupo</a>';
         }
       },
       {
         width: 'auto',
-        title: 'Members',
+        title: 'Membros',
         data: 'memberCount',
         searchable: false,
         defaultContent: "0"
       },
       {
         width: 'auto',
-        title: 'Group Cart Status',
+        title: 'Status no Carrinho',
         searchable: false,
         render: function (data, type, full, meta) {
           return '<span class="cartStatusButton" data-groupid="' + full.Id + '">Checking Cart Status</span>';
@@ -76,10 +76,10 @@ $(document).ready(function () {
     $(".cartStatusButton").each(function (index, element) {
       var objectID = $(element).data("groupid");
       if ($.inArray(objectID, window.CRM.groupsInCart) > -1) {
-        $(element).html("All members of this group are in the cart<a onclick=\"saveScrollCoordinates()\" class=\"btn btn-danger\"  href=\"GroupList.php?RemoveGroupFromPeopleCart=" + objectID + "\">Remove all</a>");
+        $(element).html("<br>Todos os Membros do grupo estão no carrinho <br> <a style= padding:3px; onclick=\"saveScrollCoordinates()\" class=\"btn btn-danger\"  href=\"GroupList.php?RemoveGroupFromPeopleCart=" + objectID + "\">Remover Todos</a>");
       }
       else {
-        $(element).html("Not all members of this group are in the cart<br><a onclick=\"saveScrollCoordinates()\" class=\"btn btn-primary\" href=\"GroupList.php?AddGroupToPeopleCart=" + objectID + "\">Add all</a>");
+        $(element).html("<br>Nem todos os Membros do grupo estão no carrinho <br> <a style= padding:3px; onclick=\"saveScrollCoordinates()\" class=\"btn btn-primary\" href=\"GroupList.php?AddGroupToPeopleCart=" + objectID + "\">Adicionar Todos</a>");
       }
     });
   });
