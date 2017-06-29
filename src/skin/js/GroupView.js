@@ -338,7 +338,7 @@ function initDataTable() {
     $("#deleteSelectedRows").text("Remover (" + selectedRows + ") membros da Sociedade");
     $("#buttonDropdown").prop('disabled', !(selectedRows));
     $("#addSelectedToGroup").prop('disabled', !(selectedRows));
-    $("#addSelectedToGroup").html("Adicionar  (" + selectedRows + ") membros a outro grupo");
+    $("#addSelectedToGroup").html("Adicionar  (" + selectedRows + ") membros a outra Sociedade");
     $("#addSelectedToCart").prop('disabled', !(selectedRows));
     $("#addSelectedToCart").html("Adicionar  (" + selectedRows + ") membros ao Carrinho");
     $("#moveSelectedToGroup").prop('disabled', !(selectedRows));
