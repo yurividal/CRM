@@ -685,7 +685,6 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $aTemp = mysqli_fetch_array($rstemp);
 				if (strlen($aTemp[0]) > 0){            
             $sAddress1 = $aTemp[0];
-            echo entrei;
          	}
          	$aTemp='';
             
@@ -760,12 +759,12 @@ require 'Include/Header.php';
 
 ?>
 <form method="post" action="PersonEditor.php?PersonID=<?= $iPersonID ?>" name="PersonEditor">
-    <div class="alert alert-info alert-dismissable">
+    <!--<div class="alert alert-info alert-dismissable">
         <i class="fa fa-info"></i>
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong><span
                 style="color: red;"><?= gettext('Red text') ?></span></strong> <?php echo gettext('indicates items inherited from the associated family record.'); ?>
-    </div>
+    </div> -->
     <?php if ($bErrorFlag) {
     ?>
         <div class="alert alert-danger alert-dismissable">
@@ -969,7 +968,7 @@ require 'Include/Header.php';
             </div> -->
         </div><!-- /.box-header -->
         <div class="box-body">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label><?= gettext('Papel na Família') ?>:</label>
                 <select name="FamilyRole" class="form-control">
                     <option value="0"><?= gettext('Unassigned') ?></option>
@@ -984,10 +983,26 @@ require 'Include/Header.php';
 } ?>
                 </select>
             </div>
-
+				
+				<?php       	
+								
+								if ($_GET['FamilyID']){ 
+								$temp = $_GET['FamilyID'];
+            				$sSQL = 'SELECT fam_Name FROM family_fam WHERE fam_ID = '.$temp;            
+          				   $stemp = RunQuery($sSQL);
+          				   $nomefamilia = mysqli_fetch_array($stemp);
+          				   echo '<span style="padding:20px; "><h4>Adicionando Membro à Familia <span style="color:red; "><b> '.$nomefamilia[0].' </b></span></h4></span>';  
+          				              				
+								?>
+						            			
+								<?php } 
+								
+								else{ ?>			
+								
+				
             <div class="form-group col-md-6">
                 <label><?= gettext('Family'); ?>:</label>
-                <select name="Family" size="8" class="form-control">
+                <select name="Family" class="form-control">
                     <option value="0" selected><?= gettext('Unassigned') ?></option>
                     <option value="-1"><?= gettext('Create a new family (using last name)') ?></option>
                     <option value="0" disabled>-----------------------</option>
@@ -1001,7 +1016,7 @@ require 'Include/Header.php';
     echo '>'.$fam_Name.'&nbsp;'.FormatAddressLine($fam_Address1, $fam_City, $fam_State);
 } ?>
                 </select>
-            </div>
+            </div> <?php } ?>	
         </div>
     </div>
     
@@ -1019,7 +1034,7 @@ require 'Include/Header.php';
                         <div class="col-md-6">
                             <label>
                                 <?php if ($bFamilyAddress1) {
-    echo '<span style="color: red;">';
+    //echo '<span style="color: red;">';
 }
 
     echo gettext('Address').' 1: (Somente Rua e Numero) ';
@@ -1035,7 +1050,7 @@ require 'Include/Header.php';
                         <div class="col-md-3">
                             <label>
                                 <?php if ($bFamilyAddress2) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('Address').' 2: (Casa ou Apto)';
@@ -1057,7 +1072,7 @@ require 'Include/Header.php';
 						<div class="col-md-2">
                             <label>
                                 <?php if ($bFamilyBairro) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('Bairro').':';
@@ -1072,7 +1087,7 @@ require 'Include/Header.php';
 						<div class="col-md-2">
                             <label>
                                 <?php if ($bFamilyCity) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('City').':';
@@ -1089,7 +1104,7 @@ require 'Include/Header.php';
 							<div class="form-group col-md-2">
                         <label for="State">
                             <?php if ($bFamilyState) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('State').':';
@@ -1104,7 +1119,7 @@ require 'Include/Header.php';
                     <div class="form-group col-md-2">
                         <label for="Zip">
                             <?php if ($bFamilyZip) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('CEP').':';
@@ -1126,7 +1141,7 @@ require 'Include/Header.php';
                     <div class="form-group col-md-2">
                         <label for="Zip">
                             <?php if ($bFamilyCountry) {
-        echo '<span style="color: red;">';
+        //echo '<span style="color: red;">';
     }
 
     echo gettext('Country').':';
@@ -1164,7 +1179,7 @@ require 'Include/Header.php';
                     <label for="HomePhone">
                         <?php
                         if ($bFamilyHomePhone) {
-                            echo '<span style="color: red;">'.gettext('Home Phone').':</span>';
+                            echo '<span ">'.gettext('Home Phone').':</span>';
                         } else {
                             echo gettext('Home Phone').':';
                         }
@@ -1187,7 +1202,7 @@ require 'Include/Header.php';
                     <label for="WorkPhone">
                         <?php
                         if ($bFamilyWorkPhone) {
-                            echo '<span style="color: red;">'.gettext('Work Phone').':</span>';
+                            echo '<span ">'.gettext('Work Phone').':</span>';
                         } else {
                             echo gettext('Work Phone').':';
                         }
@@ -1212,7 +1227,7 @@ require 'Include/Header.php';
                     <label for="CellPhone">
                         <?php
                         if ($bFamilyCellPhone) {
-                            echo '<span style="color: red;">'.gettext('Mobile Phone').':</span>';
+                            echo '<span ">'.gettext('Mobile Phone').':</span>';
                         } else {
                             echo gettext('Mobile Phone').':';
                         }
@@ -1238,7 +1253,7 @@ require 'Include/Header.php';
                     <label for="Email">
                         <?php
                         if ($bFamilyEmail) {
-                            echo '<span style="color: red;">'.gettext('Email').':</span></td>';
+                            echo '<span ">'.gettext('Email').':</span></td>';
                         } else {
                             echo gettext('Email').':</td>';
                         }
