@@ -1,6 +1,0 @@
-[20-Jun-2017 13:40:58 America/Sao_Paulo] PHP Fatal error:  Uncaught exception 'Exception' with message 'An invalid configuration name has been requested: sLogLevel ' in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php:253
-Stack trace:
-#0 /opt/lampp/htdocs/srm/CRM/src/Include/Functions.php(304): ChurchCRM\dto\SystemConfig::getValue('sLogLevel ')
-#1 /opt/lampp/htdocs/srm/CRM/src/PersonView.php(68): RunQuery('SELECT a.*, fam...')
-#2 {main}
-  thrown in /opt/lampp/htdocs/srm/CRM/src/ChurchCRM/dto/SystemConfig.php on line 253

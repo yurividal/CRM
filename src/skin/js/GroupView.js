@@ -71,6 +71,8 @@ $(document).ready(function () {
   });
 
   $(".personSearch").on("select2:select", function (e) {
+  	var dataT = $('#membersTable').DataTable();
+  	
     $.ajax({
       method: "POST",
       url: window.CRM.root + "/api/groups/" + window.CRM.currentGroup + "/adduser/" + e.params.data.objid,
@@ -84,6 +86,8 @@ $(document).ready(function () {
   });
 
   $("#deleteSelectedRows").click(function () {
+  	var dataT = $('#membersTable').DataTable();
+  	
     var deletedRows = dataT.rows('.selected').data()
     bootbox.confirm({
       message: "Are you sure you want to remove the " + deletedRows.length + " selected group members?",
@@ -124,6 +128,8 @@ $(document).ready(function () {
   });
 
   $("#addSelectedToCart").click(function () {
+    var dataT = $('#membersTable').DataTable();
+  	
     if (dataT.rows('.selected').length > 0)
     {
       var selectedPersons = {
@@ -162,6 +168,8 @@ $(document).ready(function () {
 
 
   $("#confirmTargetGroup").click(function () {
+    var dataT = $('#membersTable').DataTable();
+
     var selectedRows = dataT.rows('.selected').data()
     var targetGroupId = $("#targetGroupSelection option:selected").val()
     var action = $("#targetGroupAction").val();
@@ -198,6 +206,8 @@ $(document).ready(function () {
 
   $(document).on("click", ".changeMembership", function (e) {
     var userid = $(e.currentTarget).data("personid");
+    var dataT = $('#membersTable').DataTable();
+
     $("#changingMemberID").val(dataT.row(function (idx, data, node) {
       if (data.PersonId == userid) {
         return true;
@@ -237,7 +247,7 @@ $(document).ready(function () {
 function initDataTable() {
   dataT = $("#membersTable").dataTable({
     "language": {
-      "url": window.CRM.root + "/skin/locale/dataTables/" + window.CRM.locale + ".json"
+      "url": window.CRM.root + "/skin/locale/datatables/" + window.CRM.locale + ".json"
     },
     "dom": 'T<"clear">lfrtip',
     "tableTools": {
@@ -257,10 +267,10 @@ function initDataTable() {
     columns: [
       {
         width: 'auto',
-        title: 'Name',
+        title: 'Nome',
         data: 'PersonId',
         render: function (data, type, full, meta) {
-          return '<img data-name="'+full.Person.FirstName + ' ' + full.Person.LastName + '" data-src="' + window.CRM.root + '/api/persons/' + full.PersonId + '/thumbnail" class="direct-chat-img initials-image"> &nbsp <a href="PersonView.php?PersonID="' + full.PersonId + '"><a target="_top" href="PersonView.php?PersonID=' + full.PersonId + '">' + full.Person.FirstName + " " + full.Person.LastName + '</a>';
+          return '<img data-name="'+full.Person.FirstName + ' ' + full.Person.LastName + '" data-src="' + window.CRM.root + '/api/persons/' + full.PersonId + '/thumbnail" class="direct-chat-img initials-image"> &nbsp <a href="PersonView.php?PersonID="' + full.PersonId + '"><a target="_top" href="PersonView.php?PersonID=' + full.PersonId + '">' + full.Person.FirstName + " " + full.Person.MiddleName+ " " + full.Person.LastName + '</a>';
         }
       },
       {
@@ -276,29 +286,14 @@ function initDataTable() {
       },
       {
         width: 'auto',
-        title: 'Address',
+        title: 'Endereço',
         render: function (data, type, full, meta) {
           return full.Person.Address1 + " " + full.Person.Address2;
         }
       },
       {
         width: 'auto',
-        title: 'City',
-        data: 'Person.City'
-      },
-      {
-        width: 'auto',
-        title: 'State',
-        data: 'Person.State'
-      },
-      {
-        width: 'auto',
-        title: 'ZIP',
-        data: 'Person.Zip'
-      },
-      {
-        width: 'auto',
-        title: 'Cell Phone',
+        title: 'Celular',
         data: 'Person.CellPhone'
       },
       {
@@ -335,17 +330,19 @@ function initDataTable() {
     });
 
   $(document).on('click', '.groupRow', function () {
-    $(this).toggleClass('selected');
+    //$(this).toggleClass('selected');       
+    var dataT = $('#membersTable').DataTable();
     var selectedRows = dataT.rows('.selected').data().length;
+    
     $("#deleteSelectedRows").prop('disabled', !(selectedRows));
-    $("#deleteSelectedRows").text("Remove (" + selectedRows + ") Members from group");
+    $("#deleteSelectedRows").text("Remover (" + selectedRows + ") membros da Sociedade");
     $("#buttonDropdown").prop('disabled', !(selectedRows));
     $("#addSelectedToGroup").prop('disabled', !(selectedRows));
-    $("#addSelectedToGroup").html("Add  (" + selectedRows + ") Members to another group");
+    $("#addSelectedToGroup").html("Adicionar  (" + selectedRows + ") membros a outra Sociedade");
     $("#addSelectedToCart").prop('disabled', !(selectedRows));
-    $("#addSelectedToCart").html("Add  (" + selectedRows + ") Members to cart");
+    $("#addSelectedToCart").html("Adicionar  (" + selectedRows + ") membros ao Carrinho");
     $("#moveSelectedToGroup").prop('disabled', !(selectedRows));
-    $("#moveSelectedToGroup").html("Move  (" + selectedRows + ") Members to another group");
+    $("#moveSelectedToGroup").html("Mover  (" + selectedRows + ") membros para outra sociedade");
   });
 
 }

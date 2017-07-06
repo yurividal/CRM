@@ -135,7 +135,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     if (array_key_exists('Address1', $_POST)) {
         $sAddress1 = FilterInput($_POST['Address1']);
     }
-    if (array_key_exists('Address2', $_POST)) {
+	 if (array_key_exists('Address2', $_POST)) {
         $sAddress2 = FilterInput($_POST['Address2']);
     }
     if (array_key_exists('Bairro', $_POST)) {
@@ -198,7 +198,9 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     $bNoFormat_WorkPhone = isset($_POST['NoFormat_WorkPhone']);
     $bNoFormat_CellPhone = isset($_POST['NoFormat_CellPhone']);
     $bNoBirthYear = isset($_POST['NoBirthYear']);
-
+		
+	
+		
     //Adjust variables as needed
     if ($iFamily == 0) {
         $iFamilyRole = 0;
@@ -360,7 +362,6 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $sCellPhone = CollapsePhoneNumber($sCellPhone, $sPhoneCountry);
         }
 		  if ($bNoBirthYear) {
-				echo 'SELECIONEI NO BDAY' ;           
             $iBirthYear = '';
         }
 
@@ -441,7 +442,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             } else {
                 $sSQL .= 'NULL';
             }
-            $sSQL .= ', per_PresbiteroDate =';
+            $sSQL .= ', per_PresbiteroDate = ';
 
             if (strlen($dPresbiteroDate) > 0) {
                 $sSQL .= '"'.$dPresbiteroDate.'"';
@@ -463,7 +464,9 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
 
        //Execute the SQL
-       //echo $sSQL; 
+		 //echo 'valor familia' ;      
+       //echo $fam_Address1; 
+       //echo $sSQL;
        RunQuery($sSQL); 
 
         $note = new Note();
@@ -541,13 +544,38 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $iDiacono = $per_Diacono;
         $iPresbitero = $per_Presbitero;
         $sAddress1 = $per_Address1;
+
+			if (  (strlen($per_Address1) < 2) && (strlen($fam_Address1)) ) {        
+	        $sAddress1 = $fam_Address1;
+
+ 	   	 }
         $sAddress2 = $per_Address2;
+         
+         if ( (strlen($per_Address2) < 1) && (strlen($fam_Address2)) ) {        
+	        $sAddress2 = $fam_Address2;
+   	 }        
+        
         $sBairro = $per_Bairro;
+			
+			if ( (strlen($sBairro) < 1) && (strlen($fam_Bairro)) ) {        
+	        $sBairro = $fam_Bairro;
+   	 }        
+        
         $sCity = $per_City;
         $sState = $per_State;
         $sZip = $per_Zip;
+        
+        if ( (strlen($sZip) < 1) && (strlen($fam_Zip)) ) {        
+	        $sZip = $fam_Zip;
+   	 }          
+        
         $sCountry = $per_Country;
         $sHomePhone = $per_HomePhone;
+        
+        if ( (strlen($sHomePhone) < 1) && (strlen($fam_HomePhone)) ) {        
+	        $sHomePhone = $fam_HomePhone;
+   	 }
+   	    
         $sWorkPhone = $per_WorkPhone;
         $sCellPhone = $per_CellPhone;
         $sEmail = $per_Email;
@@ -594,6 +622,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     } else {
         //Adding....
         //Set defaults
+
+           
         $sTitle = '';
         $sFirstName = '';
         $sMiddleName = '';
@@ -647,6 +677,70 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $bFamilyEmail = 0;
         $bHomeBound = false;
         $aCustomData = [];
+       
+       if ($_GET['FamilyID']){
+				$temp = $_GET['FamilyID'];
+            $sSQL = 'SELECT per_Address1 FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+				if (strlen($aTemp[0]) > 0){            
+            $sAddress1 = $aTemp[0];
+            echo entrei;
+         	}
+         	$aTemp='';
+            
+            $sSQL = 'SELECT per_Address2 FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+            if (strlen($aTemp[0]) > 0){            
+            $sAddress2 = $aTemp[0];
+         	}
+         	$aTemp='';
+         	
+            $sSQL = 'SELECT per_Zip FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+            if (strlen($aTemp[0]) > 0){            
+            $sZip = $aTemp[0];
+         	}
+         	$aTemp='';
+         	
+				$sSQL = 'SELECT per_Bairro FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+ 				if (strlen($aTemp[0]) > 0){            
+            $sBairro = $aTemp[0];
+         	}
+         	$aTemp='';
+         	           
+            $sSQL = 'SELECT per_City FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+	          if (strlen($aTemp[0]) > 0){            
+            $sCity = $aTemp[0];
+         	}
+         	$aTemp='';
+         	 
+            $sSQL = 'SELECT per_State FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+            if (strlen($aTemp[0]) > 0){            
+            $sState = $aTemp[0];
+         	}
+         	$aTemp='';
+         	
+            $sSQL = 'SELECT per_Country FROM person_per WHERE per_fam_ID = '.$temp." LIMIT 1";            
+            $rstemp = RunQuery($sSQL);
+            $aTemp = mysqli_fetch_array($rstemp);
+            if (strlen($aTemp[0]) > 0){            
+            $sCountry = $aTemp[0];
+         	}
+         	$aTemp='';
+         	     
+			 			    
+       } 
+      
+        
     }
 }
 
