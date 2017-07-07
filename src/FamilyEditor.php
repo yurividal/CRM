@@ -86,6 +86,7 @@ $UpdateBirthYear = 0;
 $aFirstNameError = [];
 $aBirthDateError = [];
 $aperFlags = [];
+$overideAddress = 0;
 
 //Is this the second pass?
 if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
@@ -93,9 +94,12 @@ if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
     $sName = FilterInput($_POST['Name']);
     // Strip commas out of address fields because they are problematic when
     // exporting addresses to CSV file
-    $sAddress1 = str_replace(',', '', FilterInput($_POST['Address1']));
-    $sAddress2 = str_replace(',', '', FilterInput($_POST['Address2']));
-    $sBairro = str_replace(',', '', FilterInput($_POST['Bairro']));
+    //$sAddress1 = str_replace(',', '', FilterInput($_POST['Address1']));
+    //$sAddress2 = str_replace(',', '', FilterInput($_POST['Address2']));
+    //$sBairro = str_replace(',', '', FilterInput($_POST['Bairro']));
+    $sAddress1 = FilterInput($_POST['Address1']);
+    $sAddress2 = FilterInput($_POST['Address2']);
+    $sBairro = FilterInput($_POST['Bairro']);
     $sCity = FilterInput($_POST['City']);
     $sZip = FilterInput($_POST['Zip']);
 
@@ -284,7 +288,7 @@ if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
         if ($bOkToCanvass) {
             $bOkToCanvassString = "'TRUE'";
         } else {
-            $bOkToCanvassString = "'FALSE'";
+            $bOkToCanvassString = "'TRUE'";
         }
         if ($iFamilyID < 1) {
             $sSQL = "INSERT INTO family_fam (
@@ -358,10 +362,42 @@ if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
             }
             $sSQL .= ' WHERE fam_ID = '.$iFamilyID;
             $bGetKeyBack = false;
-        }
+            				
+            			
+           	// this updates the person_adress on all the people in that family.
+            				
+           	$sSQL2 = "UPDATE person_per SET per_Address1='".$sAddress1."',".
+						      "per_Address2='".$sAddress2."',".
+                        "per_Bairro='".$sBairro."',".
+                        "per_City='".$sCity."',".
+                        "per_State='".$sState."',".
+                        "per_Zip='".$sZip."',".
+                        "per_Country='".$sCountry."'  	
+           	            WHERE per_fam_ID = $iFamilyID";
+            
+            				
+        }     
+        
 
         //Execute the SQL
         RunQuery($sSQL);
+        
+        $overideAddress = $_POST['overideAddress']; 
+        if ($overideAddress){
+        RunQuery($sSQL2);
+        }
+        
+/*   //DEBUG
+
+$file = 'log.txt';
+// Open the file to get existing content
+$current = file_get_contents($file);
+// Append a new person to the file
+$current .= "John Smith\n";
+// Write the contents back to the file
+file_put_contents($file, $sSQL2); */
+
+
 
         //If the user added a new record, we need to key back to the route to the FamilyView page
         if ($bGetKeyBack) {
@@ -656,9 +692,9 @@ require 'Include/Header.php';
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext('Family Info') ?></h3>
-			<div class="pull-right"><br/>
+			<!--<div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit">
-			</div>
+			</div>-->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<div class="form-group">
@@ -671,8 +707,27 @@ require 'Include/Header.php';
 
 } ?>
 					</div>
-				</div>
-				<p/>
+				</div>				</div>				</div> 				</div>
+			
+				
+					<div class="box box-info clearfix">
+		<div class="box-header">
+			<h3 class="box-title">Endereço</h3>
+					</div>
+					
+							<div class="box-body"> 
+				<div class="row">
+					<div class="col-md-6">
+<!--						<h5><span style="color:red; "> Alterar o Endereço da Família irá alterar o endereço individual de cada membro!<b> </b></span></h5>-->
+						<input type="checkbox" Name="overideAddress" value="1"> 						
+						<label>  Alterar endereço individual de cada membro da família </label> <br><b> &nbsp;
+						<br>
+				</div></div>
+				
+					<div class="row">
+					 
+					</div>
+		
 				<div class="row">
 					<div class="col-md-6">
 						<label><?= gettext('Address') ?> 1:</label>
@@ -734,9 +789,10 @@ require 'Include/Header.php';
 
                     }
                             } /* Lat/Lon can be hidden - General Settings */ ?>
-			</div>
-		</div>
+			
+
 	</div>
+		</div>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#country-input").select2();
@@ -746,9 +802,9 @@ require 'Include/Header.php';
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext('Contact Info') ?></h3>
-			<div class="pull-right"><br/>
+			<!-- <div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit" >
-			</div>
+			</div> -->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<div class="row">
@@ -811,9 +867,9 @@ require 'Include/Header.php';
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext('Other Info') ?>:</h3>
-			<div class="pull-right"><br/>
+			<!--<div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit">
-			</div>
+			</div>-->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<?php if (!SystemConfig::getValue('bHideWeddingDate')) { /* Wedding Date can be hidden - General Settings */
@@ -821,7 +877,7 @@ require 'Include/Header.php';
                     $dWeddingDate = '';
                 } ?>
 				<div class="row">
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-2">
                         <label><?= gettext('Wedding Date') ?>:</label>
 						<input type="text" class="form-control date-picker" Name="WeddingDate" value="<?= $dWeddingDate ?>" maxlength="12" id="WeddingDate" size="15">
 						<?php if ($sWeddingDateError) {
@@ -832,65 +888,16 @@ require 'Include/Header.php';
 				</div>
 			<?php
 
-                            } /* Wedding date can be hidden - General Settings */ ?>
-			<div class="row">
-				<?php if ($_SESSION['bCanvasser']) { // Only show this field if the current user is a canvasser?>
-					<div class="form-group col-md-4">
-						<label><?= gettext('Ok To Canvass') ?>: </label><br/>
-						<input type="checkbox" Name="OkToCanvass" value="1" <?php if ($bOkToCanvass) {
-                                echo ' checked ';
-                            } ?> >
-					</div>
-				<?php
-
-                            }
-
-                if ($rsCanvassers != 0 && mysqli_num_rows($rsCanvassers) > 0) {
-                    ?>
-				<div class="form-group col-md-4">
-					<label><?= gettext('Assign a Canvasser') ?>:</label>
-					<?php // Display all canvassers
-                    echo "<select name='Canvasser' class=\"form-control\"><option value=\"0\">None selected</option>";
-                    while ($aCanvasser = mysqli_fetch_array($rsCanvassers)) {
-                        echo '<option value="'.$aCanvasser['per_ID'].'"';
-                        if ($aCanvasser['per_ID'] == $iCanvasser) {
-                            echo ' selected';
-                        }
-                        echo '>';
-                        echo $aCanvasser['per_FirstName'].' '.$aCanvasser['per_LastName'];
-                        echo '</option>';
-                    }
-                    echo '</select></div>';
-                }
-
-                if ($rsBraveCanvassers != 0 && mysqli_num_rows($rsBraveCanvassers) > 0) {
-                    ?>
-					<div class="form-group col-md-4">
-						<label><?= gettext('Assign a Brave Canvasser') ?>: </label>
-
-						<?php // Display all canvassers
-                        echo "<select name='BraveCanvasser' class=\"form-control\"><option value=\"0\">None selected</option>";
-                    while ($aBraveCanvasser = mysqli_fetch_array($rsBraveCanvassers)) {
-                        echo '<option value="'.$aBraveCanvasser['per_ID'].'"';
-                        if ($aBraveCanvasser['per_ID'] == $iCanvasser) {
-                            echo ' selected';
-                        }
-                        echo '>';
-                        echo $aBraveCanvasser['per_FirstName'].' '.$aBraveCanvasser['per_LastName'];
-                        echo '</option>';
-                    }
-                    echo '</select></div>';
-                } ?>
-			</div>
-		</div>
+                            } ?>
+		</div> 
 	</div>
 	<?php if (SystemConfig::getValue('bUseDonationEnvelopes')) { /* Donation envelopes can be hidden - General Settings */ ?>
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3><?= gettext('Envelope Info') ?></h3>
-			<div class="pull-right"><br/>
+			<!--<div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit">
-			</div>
+			</div>-->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 			<div class="row">
@@ -911,9 +918,9 @@ require 'Include/Header.php';
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext('Custom Fields') ?></h3>
-			<div class="pull-right"><br/>
+			<!--<div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit">
-			</div>
+			</div>-->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 		<?php mysqli_data_seek($rsCustomFields, 0);
@@ -943,9 +950,9 @@ require 'Include/Header.php';
 	<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title"><?= gettext('Family Members') ?></h3>
-			<div class="pull-right"><br/>
+			<!--<div class="pull-right"><br/>
 				<input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="FamilySubmit">
-			</div>
+			</div>-->
 		</div><!-- /.box-header -->
 		<div class="box-body">
 
@@ -1137,8 +1144,9 @@ require 'Include/Header.php';
     }
 
     echo '<td colspan="2" align="center">';
-    echo '<input type="hidden" Name="UpdateBirthYear" value="'.$UpdateBirthYear.'">';
-
+    echo '<div class="row"> <input type="hidden" Name="UpdateBirthYear" value="'.$UpdateBirthYear.'">';
+    
+	 echo '            <div class="pull-right" style="padding: 20px; padding-right: 1%;">';
     echo '<input type="submit" class="btn btn-primary" value="'.gettext('Save').'" Name="FamilySubmit"> ';
     if ($_SESSION['bAddRecords']) {
         echo ' <input type="submit" class="btn btn-info" value="'.gettext('Save and Add').'" name="FamilySubmitAndAdd"> ';
@@ -1150,6 +1158,7 @@ require 'Include/Header.php';
         echo " onclick=\"javascript:document.location='FamilyList.php';\">";
     }
     echo '</td></tr></form></table>';
+    echo '</div></div>';
 ?>
 
 	<script type="text/javascript">
