@@ -720,7 +720,7 @@ require 'Include/Header.php';
 					<div class="col-md-6">
 <!--						<h5><span style="color:red; "> Alterar o Endereço da Família irá alterar o endereço individual de cada membro!<b> </b></span></h5>-->
 						<input type="checkbox" Name="overideAddress" value="1"> 						
-						<label>  Alterar endereço individual de cada membro da família </label> <br><b> &nbsp;
+						<label>  Alterar endereço individual de cada membro da família </label> <br> &nbsp;
 						<br>
 				</div></div>
 				
