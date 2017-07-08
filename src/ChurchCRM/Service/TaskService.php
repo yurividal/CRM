@@ -10,7 +10,7 @@ use ChurchCRM\Tasks\FamilyWorkPhoneTask;
 use ChurchCRM\Tasks\IntegrityCheckTask;
 use ChurchCRM\Tasks\PrerequisiteCheckTask;
 use ChurchCRM\Tasks\iTask;
-use ChurchCRM\Tasks\LatestReleaseTask;
+// use ChurchCRM\Tasks\LatestReleaseTask;
 use ChurchCRM\Tasks\RegisteredTask;
 use ChurchCRM\Tasks\PersonGenderDataCheck;
 use ChurchCRM\Tasks\PersonClassificationDataCheck;
@@ -35,7 +35,7 @@ class TaskService
             new EmailTask(),
 //            new HttpsTask(),
    //         new IntegrityCheckTask(),
-            new LatestReleaseTask(),
+        //    new LatestReleaseTask(),
             new RegisteredTask(),
  //           new FamilyWorkPhoneTask(),
             new PersonGenderDataCheck(),
