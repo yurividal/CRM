@@ -373,7 +373,8 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $iBirthYear = '';
         }
 
-             
+        	$temp = $sAddress1.", ".$sNumero;
+			$sAddress1=$temp;     
       
 
         // New Family (add)
@@ -396,8 +397,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         }
 
 			// junta o endereço com o numero, e guarda na variavel address1
-			$temp = $sAddress1.", ".$sNumero;
-			$sAddress1=$temp;
+			
 
 
         // New Person (add)
