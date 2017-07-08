@@ -881,7 +881,7 @@ require 'Include/Header.php';
 } ?>><?= gettext('January') ?></option>
                             <option value="02" <?php if ($iBirthMonth == 2) {
     echo 'selected';
-} ?>><?= gettext('FebAddress1ry') ?></option>
+} ?>><?= gettext('February') ?></option>
                             <option value="03" <?php if ($iBirthMonth == 3) {
     echo 'selected';
 } ?>><?= gettext('March') ?></option>
