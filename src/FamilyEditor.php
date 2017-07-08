@@ -105,6 +105,7 @@ if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
     $sBairro = FilterInput($_POST['Bairro']);
     $sCity = FilterInput($_POST['City']);
     $sZip = FilterInput($_POST['Zip']);
+    $sNumero = FilterInput($_POST['Numero']);
 
     // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
     if (SystemConfig::getValue('cfgForceUppercaseZip')) {
@@ -281,6 +282,10 @@ if (isset($_POST['FamilySubmit']) || isset($_POST['FamilySubmitAndAdd'])) {
         if (!$bNoFormat_CellPhone) {
             $sCellPhone = CollapsePhoneNumber($sCellPhone, $sCountry);
         }
+        
+         	
+         $temp = $sAddress1.", ".$sNumero;
+			$sAddress1=$temp;    
 
         //Write the base SQL depending on the Action
         if ($bSendNewsLetter) {
@@ -582,6 +587,7 @@ file_put_contents($file, $sSQL2); */
         $dWeddingDate = $fam_WeddingDate;
         $nLatitude = $fam_Latitude;
         $nLongitude = $fam_Longitude;
+        $sNumero = '';
 
         // Expand the phone number
         $sHomePhone = ExpandPhoneNumber($sHomePhone, $sCountry, $bNoFormat_HomePhone);
@@ -716,9 +722,6 @@ require 'Include/Header.php';
 					<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title">Endereço</h3>
-			<h3 class="box-title" style="color:#FF0000;"> - Dica: Preencha o CEP primeiro!</h3>
-			
-			
 					</div>
 					
 							<div class="box-body"> 
@@ -735,24 +738,46 @@ require 'Include/Header.php';
 					</div>
 		
 				<div class="row">
-					<div class="col-md-6">
+					
+					<div class="form-group col-md-1">
+						<!--<label><?= gettext('Zip')?>:</label>-->
+						<label>CEP:</label>
+						<input type="text" id="Zip" Name="Zip"  class="form-control" <?php
+                            // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
+                            if (SystemConfig::getValue('cfgForceUppercaseZip')) {
+                                echo 'style="text-transform:uppercase" ';
+                            }
+                            echo 'value="'.htmlentities(stripslashes($sZip), ENT_NOQUOTES, 'UTF-8').'" '; ?>
+							maxlength="10" size="8">
+					</div>					
+					
+					<div class="col-md-4">
 						<!--<label><?= gettext('Address') ?> 1:</label>-->
-						<label>Endereço com Número:</label>
-							<input type="text" id="Address1" Name="Address1" value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
+						<label>Logradouro:</label>
+							<input type="text" id="Address1" Name="Address1" value="<?= htmlentities(stripslashes((explode(",", $sAddress1, 2)[0])), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
 					</div>
-					<div class="col-md-6">
+					
+					<div class="col-md-1">
+						<label>Número:</label>
+							<input type="text" id="Numero" Name="Numero" value="<?= htmlentities(stripslashes(substr($sAddress1, strpos($sAddress1, ",") + 1)), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
+					</div>					
+					
+					<div class="col-md-2">
 						<!--<label><?= gettext('Address') ?> 2:</label>-->
 						<label>Complemento (casa, apto e etc):</label>
 						<input type="text" id="Address2" Name="Address2" value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
 					</div>
-					<div class="col-md-6">
+					</div>
+					
+					<div class="row">
+					<div class="col-md-3">
 						<label for="StatleTextBox"><?= gettext('Bairro')?>: </label>
 						<?php echo '<input type="text" id="Bairro" name="Bairro" 
                                    value="'.$sBairro.'"
                                     size="30" maxlength="50" class="form-control">' ?>
 						<?php //require 'Include/BairroDropDown.php'; ?>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<label><?= gettext('City') ?>:</label>
 						<input type="text" id="City" Name="City" value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, 'UTF-8') ?>" maxlength="50"  class="form-control">
 					</div>
@@ -772,17 +797,7 @@ require 'Include/Header.php';
     echo htmlentities(stripslashes($sState), ENT_NOQUOTES, 'UTF-8');
 } ?>" size="20" maxlength="30">
 					</div>
-					<div class="form-group col-md-3">
-						<!--<label><?= gettext('Zip')?>:</label>-->
-						<label>CEP:</label>
-						<input type="text" id="Zip" Name="Zip"  class="form-control" <?php
-                            // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
-                            if (SystemConfig::getValue('cfgForceUppercaseZip')) {
-                                echo 'style="text-transform:uppercase" ';
-                            }
-                            echo 'value="'.htmlentities(stripslashes($sZip), ENT_NOQUOTES, 'UTF-8').'" '; ?>
-							maxlength="10" size="8">
-					</div>
+					
 					<div class="form-group col-md-3">
 						<label> <?= gettext('Country') ?>:</label>
 						<?php require 'Include/CountryDropDown.php' ?>

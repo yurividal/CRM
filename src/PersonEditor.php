@@ -140,6 +140,9 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
     if (array_key_exists('Address1', $_POST)) {
         $sAddress1 = FilterInput($_POST['Address1']);
     }
+    if (array_key_exists('Numero', $_POST)) {
+        $sNumero = FilterInput($_POST['Numero']);
+    }
 	 if (array_key_exists('Address2', $_POST)) {
         $sAddress2 = FilterInput($_POST['Address2']);
     }
@@ -392,6 +395,11 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
             $per_Flags = 0;
         }
 
+			// junta o endereço com o numero, e guarda na variavel address1
+			$temp = $sAddress1.", ".$sNumero;
+			$sAddress1=$temp;
+
+
         // New Person (add)
       if ($iPersonID < 1) {
             $iEnvelope = 0;
@@ -549,6 +557,7 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
         $iDiacono = $per_Diacono;
         $iPresbitero = $per_Presbitero;
         $sAddress1 = $per_Address1;
+        $sNumero = ''; 
 
 			if (  (strlen($per_Address1) < 2) && (strlen($fam_Address1)) ) {        
 	        $sAddress1 = $fam_Address1;
@@ -560,7 +569,9 @@ if (isset($_POST['PersonSubmit']) || isset($_POST['PersonSubmitAndAdd'])) {
 	        $sAddress2 = $fam_Address2;
    	 }        
         
-        $sBairro = $per_Bairro;
+if ( (strlen($per_Address2) < 1) && (strlen($fam_Address2)) ) {        
+	        $sAddress2 = $fam_Address2;
+   	 }
 			
 			if ( (strlen($sBairro) < 1) && (strlen($fam_Bairro)) ) {        
 	        $sBairro = $fam_Bairro;
@@ -1028,7 +1039,7 @@ require 'Include/Header.php';
     <div class="box box-info clearfix">
         <div class="box-header">
             <h3 class="box-title"><?= gettext('Contact Info') ?></h3>
-				<h3 class="box-title" style="color:#FF0000;"> - Dica: Preencha o CEP primeiro!</h3>
+
             <!-- <div class="pull-right"><br/>
                 <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
             </div> -->
@@ -1037,23 +1048,62 @@ require 'Include/Header.php';
             <?php if (!SystemConfig::getValue('bHidePersonAddress')) { /* Person Address can be hidden - General Settings */ ?>
                 <div class="row">
                     <div class="form-group">
-                        <div class="col-md-6">
+                        <div class="col-md-1">
+
+
+							<label for="Zip">
+                            <?php if ($bFamilyZip) {
+        //echo '<span style="color: red;">';
+    }
+
+    echo gettext('CEP').':';
+
+    if ($bFamilyZip) {
+        echo '</span>';
+    } ?>
+                        </label>
+                        
+                        
+                        <input type="text" id="Zip" name="Zip" class="form-control"
+                            <?php
+                            // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
+                            if (SystemConfig::getValue('cfgForceUppercaseZip')) {
+                                echo 'style="text-transform:uppercase" ';
+                            }
+
+    echo 'value="'.htmlentities(stripslashes($sZip), ENT_NOQUOTES, 'UTF-8').'" '; ?>
+                               maxlength="10" size="8">
+
+							</div>
+                           <div class="col-md-4">
+                           
+                           
                             <label>
                                 <?php if ($bFamilyAddress1) {
     //echo '<span style="color: red;">';
 }
 
     //echo gettext('Address').' 1: (Somente Address1 e Numero) ';
-    echo 'Endereço com Número:';
+    echo 'Logradouro:';
 
     if ($bFamilyAddress1) {
         echo '</span>';
     } ?>
                             </label>
                             <input type="text" id="Address1" name="Address1"
-                                   value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>"
+                                   value="<?= htmlentities(stripslashes((explode(",", $sAddress1, 2)[0])), ENT_NOQUOTES, 'UTF-8') ?>"
                                    size="30" maxlength="50" class="form-control">
                         </div>
+
+							<div class="col-md-1">
+                           
+                           
+                            <label>Número</label>
+                            <input type="text" id="Numero" name="Numero"
+                                   value="<?= htmlentities(stripslashes(substr($sAddress1, strpos($sAddress1, ",") + 1)), ENT_NOQUOTES, 'UTF-8') ?>"
+                                   size="30" maxlength="50" class="form-control">
+                        </div>                        
+                        
                         <div class="col-md-3">
                             <label>
                                 <?php if ($bFamilyAddress2) {
@@ -1061,7 +1111,9 @@ require 'Include/Header.php';
     }
 
     //echo gettext('Address').' 2: (Casa ou Apto)';
+   
     echo 'Complemento (casa, apto e etc):';
+
 
     if ($bFamilyAddress2) {
         echo '</span>';
@@ -1080,7 +1132,7 @@ require 'Include/Header.php';
 						<div class="col-md-2">
                             <label>
                                 <?php if ($bFamilyBairro) {
-        //echo '<span style="color: red;">';
+
     }
 
     echo gettext('Bairro').':';
@@ -1128,28 +1180,7 @@ require 'Include/Header.php';
                         <?php require 'Include/StateDropDown.php'; ?>
                     </div>
                     
-                    <div class="form-group col-md-2">
-                        <label for="Zip">
-                            <?php if ($bFamilyZip) {
-        //echo '<span style="color: red;">';
-    }
-
-    echo gettext('CEP').':';
-
-    if ($bFamilyZip) {
-        echo '</span>';
-    } ?>
-                        </label>
-                        <input type="text" id="Zip" name="Zip" class="form-control"
-                            <?php
-                            // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
-                            if (SystemConfig::getValue('cfgForceUppercaseZip')) {
-                                echo 'style="text-transform:uppercase" ';
-                            }
-
-    echo 'value="'.htmlentities(stripslashes($sZip), ENT_NOQUOTES, 'UTF-8').'" '; ?>
-                               maxlength="10" size="8">
-                    </div>
+                    
                     <div class="form-group col-md-2">
                         <label for="Zip">
                             <?php if ($bFamilyCountry) {
@@ -1171,6 +1202,8 @@ require 'Include/Header.php';
 } else { // put the current values in hidden controls so they are not lost if hiding the person-specific info?>
                 <input type="hidden" name="Address1"
                        value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>"></input>
+					 <input type="hidden" name="Numero"
+                       value="<?= htmlentities(stripslashes(substr($sAddress1, strpos($data, ",") + 1)), ENT_NOQUOTES, 'UTF-8') ?>"></input>                       
                 <input type="hidden" name="Address2"
                        value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, 'UTF-8') ?>"></input>
                 <input type="hidden" name="Bairro"
