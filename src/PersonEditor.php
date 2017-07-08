@@ -1,3 +1,6 @@
+<!-- Adicionando JQuery -->
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
 <?php
 /*******************************************************************************
  *
@@ -12,6 +15,8 @@
  *  (at your option) any later version.
  *
  ******************************************************************************/
+ 
+ 
 
 //Include the function library
 require 'Include/Config.php';
@@ -876,7 +881,7 @@ require 'Include/Header.php';
 } ?>><?= gettext('January') ?></option>
                             <option value="02" <?php if ($iBirthMonth == 2) {
     echo 'selected';
-} ?>><?= gettext('February') ?></option>
+} ?>><?= gettext('FebAddress1ry') ?></option>
                             <option value="03" <?php if ($iBirthMonth == 3) {
     echo 'selected';
 } ?>><?= gettext('March') ?></option>
@@ -1023,6 +1028,7 @@ require 'Include/Header.php';
     <div class="box box-info clearfix">
         <div class="box-header">
             <h3 class="box-title"><?= gettext('Contact Info') ?></h3>
+				<h3 class="box-title" style="color:#FF0000;"> - Dica: Preencha o CEP primeiro!</h3>
             <!-- <div class="pull-right"><br/>
                 <input type="submit" class="btn btn-primary" value="<?= gettext('Save') ?>" name="PersonSubmit">
             </div> -->
@@ -1037,13 +1043,14 @@ require 'Include/Header.php';
     //echo '<span style="color: red;">';
 }
 
-    echo gettext('Address').' 1: (Somente Rua e Numero) ';
+    //echo gettext('Address').' 1: (Somente Address1 e Numero) ';
+    echo 'Endereço com Número:';
 
     if ($bFamilyAddress1) {
         echo '</span>';
     } ?>
                             </label>
-                            <input type="text" name="Address1"
+                            <input type="text" id="Address1" name="Address1"
                                    value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>"
                                    size="30" maxlength="50" class="form-control">
                         </div>
@@ -1053,13 +1060,14 @@ require 'Include/Header.php';
         //echo '<span style="color: red;">';
     }
 
-    echo gettext('Address').' 2: (Casa ou Apto)';
+    //echo gettext('Address').' 2: (Casa ou Apto)';
+    echo 'Complemento (casa, apto e etc):';
 
     if ($bFamilyAddress2) {
         echo '</span>';
     } ?>
                             </label>
-                            <input type="text" name="Address2"
+                            <input type="text" id="Address2" name="Address2"
                                    value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, 'UTF-8') ?>"
                                    size="30" maxlength="50" class="form-control">
                         </div>
@@ -1081,7 +1089,11 @@ require 'Include/Header.php';
         echo '</span>';
     } ?>
                             </label>
-                            <?php require 'Include/BairroDropDown.php'; ?>
+                            <?php echo '<input type="text" id="Bairro" name="Bairro" 
+                                   value="'.$sBairro.'"
+                                    size="30" maxlength="50" class="form-control">' ?>
+                                    
+                            <?php //require 'Include/BairroDropDown.php'; ?>
                         </div>
                         
 						<div class="col-md-2">
@@ -1096,7 +1108,7 @@ require 'Include/Header.php';
         echo '</span>';
     } ?>
                             </label>
-                            <input type="text" name="City"
+                            <input type="text" id="City" name="City"
                                    value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, 'UTF-8') ?>"
                                    class="form-control">
                         </div>
@@ -1128,7 +1140,7 @@ require 'Include/Header.php';
         echo '</span>';
     } ?>
                         </label>
-                        <input type="text" name="Zip" class="form-control"
+                        <input type="text" id="Zip" name="Zip" class="form-control"
                             <?php
                             // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
                             if (SystemConfig::getValue('cfgForceUppercaseZip')) {
@@ -1673,5 +1685,36 @@ $("#Presbitero").change(function () {
 });
 
 </script>
+<!-- INICIO - Preenchimento automático de endereço -->
+<!-- Estamos usando um webservice EXTERNO! -->
+<script type="text/javascript">
+		$("#Zip").focusout(function(){
+			//Início do Comando AJAX
+			$.ajax({
+				//O campo URL diz o caminho de onde virá os dados
+				//É importante concatenar o valor digitado no CEP
+				url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
+				//Aqui você deve preencher o tipo de dados que será lido,
+				//no caso, estamos lendo JSON.
+				dataType: 'json',
+				//SUCESS é referente a função que será executada caso
+				//ele consiga ler a fonte de dados com sucesso.
+				//O parâmetro dentro da função se refere ao nome da variável
+				//que você vai dar para ler esse objeto.
+				success: function(resposta){
+					//Agora basta definir os valores que você deseja preencher
+					//automaticamente nos campos acima.
+					$("#Address1").val(resposta.logradouro);
+					$("#Bairro").val(resposta.bairro);
+					$("#City").val(resposta.localidade);
+					$("#state-input").val(resposta.uf);
+					//Vamos incluir para que o Número seja focado automaticamente
+					//melhorando a experiência do usuário
+					$("#Address1").focus();
+				}
+			});
+		});
+</script>
+<!-- FIM - Preenchimento automático de endereço -->	
 
 <?php require 'Include/Footer.php' ?>

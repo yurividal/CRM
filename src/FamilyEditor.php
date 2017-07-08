@@ -1,3 +1,6 @@
+<!-- Adicionando JQuery -->
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
 <?php
 /*******************************************************************************
  *
@@ -713,6 +716,9 @@ require 'Include/Header.php';
 					<div class="box box-info clearfix">
 		<div class="box-header">
 			<h3 class="box-title">Endereço</h3>
+			<h3 class="box-title" style="color:#FF0000;"> - Dica: Preencha o CEP primeiro!</h3>
+			
+			
 					</div>
 					
 							<div class="box-body"> 
@@ -730,37 +736,46 @@ require 'Include/Header.php';
 		
 				<div class="row">
 					<div class="col-md-6">
-						<label><?= gettext('Address') ?> 1:</label>
-							<input type="text" Name="Address1" value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
+						<!--<label><?= gettext('Address') ?> 1:</label>-->
+						<label>Endereço com Número:</label>
+							<input type="text" id="Address1" Name="Address1" value="<?= htmlentities(stripslashes($sAddress1), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
 					</div>
 					<div class="col-md-6">
-						<label><?= gettext('Address') ?> 2:</label>
-						<input type="text" Name="Address2" value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
+						<!--<label><?= gettext('Address') ?> 2:</label>-->
+						<label>Complemento (casa, apto e etc):</label>
+						<input type="text" id="Address2" Name="Address2" value="<?= htmlentities(stripslashes($sAddress2), ENT_NOQUOTES, 'UTF-8') ?>" size="50" maxlength="250"  class="form-control">
 					</div>
 					<div class="col-md-6">
 						<label for="StatleTextBox"><?= gettext('Bairro')?>: </label>
-						<?php require 'Include/BairroDropDown.php'; ?>
+						<?php echo '<input type="text" id="Bairro" name="Bairro" 
+                                   value="'.$sBairro.'"
+                                    size="30" maxlength="50" class="form-control">' ?>
+						<?php //require 'Include/BairroDropDown.php'; ?>
 					</div>
 					<div class="col-md-6">
 						<label><?= gettext('City') ?>:</label>
-						<input type="text" Name="City" value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, 'UTF-8') ?>" maxlength="50"  class="form-control">
+						<input type="text" id="City" Name="City" value="<?= htmlentities(stripslashes($sCity), ENT_NOQUOTES, 'UTF-8') ?>" maxlength="50"  class="form-control">
 					</div>
 				</div>
 				<p/>
 				<div class="row">
+				<!--
 					<div class="form-group col-md-3">
 						<label for="StatleTextBox"><?= gettext('State')?>: </label>
-						<?php require 'Include/StateDropDown.php'; ?>
-					</div>
+						<?php //require 'Include/StateDropDown.php'; ?>
+						
+					</div>-->
 					<div class="form-group col-md-3">
-						<label><?= gettext('None US/CND State') ?>:</label>
-						<input type="text"  class="form-control" name="StateTextbox" value="<?php if ($sCountry != 'United States' && $sCountry != 'Canada') {
+					<!-- Antigo nome -- None US/CND State -->
+						<label><?= gettext('Estado') ?>:</label>
+						<input type="text"  class="form-control" id="StateTextbox" name="StateTextbox" value="<?php if ($sCountry != 'United States' && $sCountry != 'Canada') {
     echo htmlentities(stripslashes($sState), ENT_NOQUOTES, 'UTF-8');
 } ?>" size="20" maxlength="30">
 					</div>
 					<div class="form-group col-md-3">
-						<label><?= gettext('Zip')?>:</label>
-						<input type="text" Name="Zip"  class="form-control" <?php
+						<!--<label><?= gettext('Zip')?>:</label>-->
+						<label>CEP:</label>
+						<input type="text" id="Zip" Name="Zip"  class="form-control" <?php
                             // bevand10 2012-04-26 Add support for uppercase ZIP - controlled by administrator via cfg param
                             if (SystemConfig::getValue('cfgForceUppercaseZip')) {
                                 echo 'style="text-transform:uppercase" ';
@@ -1167,4 +1182,38 @@ require 'Include/Header.php';
 		});
 
 	</script>
+	
+<!-- INICIO - Preenchimento automático de endereço -->
+<!-- Estamos usando um webservice EXTERNO! -->
+<script type="text/javascript">
+		$("#Zip").focusout(function(){
+			//Início do Comando AJAX
+			$.ajax({
+				//O campo URL diz o caminho de onde virá os dados
+				//É importante concatenar o valor digitado no CEP
+				url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
+				//Aqui você deve preencher o tipo de dados que será lido,
+				//no caso, estamos lendo JSON.
+				dataType: 'json',
+				//SUCESS é referente a função que será executada caso
+				//ele consiga ler a fonte de dados com sucesso.
+				//O parâmetro dentro da função se refere ao nome da variável
+				//que você vai dar para ler esse objeto.
+				success: function(resposta){
+					//Agora basta definir os valores que você deseja preencher
+					//automaticamente nos campos acima.
+					$("#Address1").val(resposta.logradouro);
+					$("#Bairro").val(resposta.bairro);
+					$("#City").val(resposta.localidade);
+					$("#state-input").val(resposta.uf);
+					$("#StateTextbox").val(resposta.uf);					
+					
+					//Vamos incluir para que o Número seja focado automaticamente
+					//melhorando a experiência do usuário
+					$("#Address1").focus();
+				}
+			});
+		});
+</script>
+<!-- FIM - Preenchimento automático de endereço -->
 <?php require 'Include/Footer.php' ?>
