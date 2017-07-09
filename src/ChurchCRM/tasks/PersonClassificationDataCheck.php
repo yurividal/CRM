@@ -40,5 +40,13 @@ class PersonClassificationDataCheck implements iTask
     {
         return gettext("Falta informação sobre status de Membresia de algumas pessoas");
     }
+    
+       
 
 }
+
+$sSQL = "UPDATE person_per
+SET per_cls_ID = 4
+WHERE per_cls_ID = 2 AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(CONCAT(per_BirthYear,'-',per_BirthMonth,'-',per_BirthDay))),'%Y')+0) > 18";
+
+	  RunQuery($sSQL);
