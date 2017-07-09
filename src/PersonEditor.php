@@ -1743,7 +1743,7 @@ $("#Presbitero").change(function () {
 					$("#state-input").val(resposta.uf);
 					//Vamos incluir para que o Número seja focado automaticamente
 					//melhorando a experiência do usuário
-					$("#Address1").focus();
+					$("#Numero").focus();
 				}
 			});
 		});
