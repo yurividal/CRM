@@ -115,6 +115,27 @@ class DashboardService
 
         return $data;
     }
+    
+ 	public function getExpiryStats()
+    {
+        $sSQL = 'select
+        (select count(*) from group_grp) as Groups,
+        (select COUNT(per_ID) from person_per where (per_Diacono = 1 or per_Presbitero = 1) AND (date_add(per_DiaconoDate, INTERVAL 5 YEAR) between now() and DATE_ADD(now(), INTERVAL 6 MONTH) OR date_add(per_PresbiteroDate, INTERVAL 5 YEAR) between now() and DATE_ADD(now(), INTERVAL 6 MONTH))
+ ) as SundaySchoolClasses,
+        (Select count(*) from person_per
+          INNER JOIN person2group2role_p2g2r ON p2g2r_per_ID = per_ID
+          INNER JOIN group_grp ON grp_ID = p2g2r_grp_ID
+          LEFT JOIN family_fam ON fam_ID = per_fam_ID
+          where fam_DateDeactivated is  null and
+	            p2g2r_rle_ID = 2 and grp_Type = 4) as SundaySchoolKidsCount
+        from dual ;
+        ';
+        $rsQuickStat = RunQuery($sSQL);
+        $row = mysqli_fetch_array($rsQuickStat);
+        $data = ['groups' => $row['Groups'], 'sundaySchoolClasses' => $row['SundaySchoolClasses'], 'sundaySchoolkids' => $row['SundaySchoolKidsCount']];
+
+        return $data;
+    }
 
 
     /**

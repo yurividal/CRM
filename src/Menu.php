@@ -38,6 +38,7 @@ $dashboardService = new DashboardService();
 $personCount = $dashboardService->getPersonCount();
 $familyCount = $dashboardService->getFamilyCount();
 $groupStats = $dashboardService->getGroupStats();
+$expiryStats = $dashboardService->getExpiryStats();
 //Last edited active families
 $updatedFamilies = $dashboardService->getUpdatedFamilies(10);
 //Newly added active families
@@ -103,26 +104,26 @@ require 'Include/Header.php';
     </div><!-- ./col -->
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-red">
             <div class="inner">
                 <h3>
-                    <?= $groupStats['sundaySchoolClasses'] ?>
+                    <?= $expiryStats['sundaySchoolClasses'] ?>
                 </h3>
                 <p>
-                    <?= gettext('Sunday School Classes') ?>
+                    <?= gettext('Mandatos vencendo nos próximos 6 meses') ?>
                 </p>
             </div>
             <div class="icon">
-                <i class="fa fa-child"></i>
+                <i class="fa fa-gg"></i>
             </div>
-            <a href="<?= SystemURLs::getRootPath() ?>/sundayschool/SundaySchoolDashboard.php" class="small-box-footer">
-                <?= gettext('More info') ?> <i class="fa fa-arrow-circle-right"></i>
+            <a href="<?= SystemURLs::getRootPath() ?>/QueryView.php?QueryID=210" class="small-box-footer">
+                <?= gettext('Verificar') ?> <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div><!-- ./col -->
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
-        <div class="small-box bg-red">
+        <div class="small-box bg-yellow">
             <div class="inner">
                 <h3>
                   <?= $groupStats['groups'] - $groupStats['sundaySchoolClasses']  ?>
@@ -132,7 +133,7 @@ require 'Include/Header.php';
                 </p>
             </div>
             <div class="icon">
-                <i class="fa fa-gg"></i>
+                <i class="fa fa-child"></i>
             </div>
             <a href="<?= SystemURLs::getRootPath() ?>/GroupList.php" class="small-box-footer">
                 <?= gettext('More info') ?>  <i class="fa fa-arrow-circle-right"></i>
