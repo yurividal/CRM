@@ -1083,12 +1083,12 @@ while ($aRow = mysqli_fetch_array($rsPersons)) {
     case 'family':
         if ($fam_ID != $iPrevFamily || $iPrevFamily == -1) {
             echo $sBlankLine;
-            echo '<tr><td></td><td class="ControlBreak">';
+            echo '<tr><td></td><td class="ControlBreak" style="font-size: 20px; padding-top:40px; padding-bottom:40px; left: -55px;">';
 
             if (isset($fam_Name)) {
                 echo $fam_Name;
             } else {
-                echo gettext('Unassigned');
+                echo gettext('Sem Família cadastrada');
             }
 
             echo '</td></tr>';
@@ -1100,9 +1100,10 @@ while ($aRow = mysqli_fetch_array($rsPersons)) {
         if (mb_strtoupper(mb_substr($per_FirstName, 0, 1, 'UTF-8')) != $sPrevLetter) {
             echo $sBlankLine;
             echo '<tr><td></td>';
-            echo '<td class="ControlBreak">'.mb_strtoupper(mb_substr($per_FirstName, 0, 1, 'UTF-8'));
+            echo '<td class="ControlBreak" style="font-size: 40px; padding-top:40px; padding-bottom:40px; left: -55px;" >'.mb_strtoupper(mb_substr($per_FirstName, 0, 1, 'UTF-8'));
             echo '</td></tr>';
             $sRowClass = 'RowColorA';
+
         }
         break;
 
