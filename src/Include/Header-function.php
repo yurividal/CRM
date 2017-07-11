@@ -55,7 +55,7 @@ function Header_head_metatag()
     if (strlen($sMetaRefresh) > 0) {
         echo $sMetaRefresh;
     } ?>
-    <title>ChurchCRM: <?= $sPageTitle ?></title>
+    <title>srmIPJG: <?= $sPageTitle ?></title>
     <?php
 
 }
