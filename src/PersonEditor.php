@@ -693,6 +693,8 @@ if ( (strlen($per_Address2) < 1) && (strlen($fam_Address2)) ) {
         $bFamilyEmail = 0;
         $bHomeBound = false;
         $aCustomData = [];
+
+        $FamilyBKP = 0;
        
        if ($_GET['FamilyID']){
 				$temp = $_GET['FamilyID'];
@@ -1002,7 +1004,7 @@ require 'Include/Header.php';
 				
 				<?php       	
 								
-								if ($_GET['FamilyID']){ 
+								if ($_GET['FamilyID'] && 1==2){ 
 								$temp = $_GET['FamilyID'];
             				$sSQL = 'SELECT fam_Name FROM family_fam WHERE fam_ID = '.$temp;            
           				   $stemp = RunQuery($sSQL);
